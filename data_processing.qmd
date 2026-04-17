@@ -31,7 +31,7 @@ That being said, these data are still very valuable; the goal of analyzing these
 
 ### Reported vs Predicted Values
 
-To address discrepancies between reported and true counts, methods were developed to adjust reported counts for reporting delays by generating a set of predicted counts in the dataset.
+To address discrepancies between reported and true counts, methods were developed by NVSS to adjust reported counts for reporting delays by generating a set of predicted counts in the dataset.
 
 NVSS data documentation states, “*State predicted drug overdose death counts differed by an average of 0.1% (ranging from 0.0 to 0.5%). National predicted counts for deaths involving opioids had a difference of 0.1%, while state predicted counts had an average difference of 0.3% (ranging from 0.3 to 2.9%).*”
 
@@ -220,7 +220,7 @@ as.data.frame(head(preview2)) %>%
 
 ### US Population Data Cleaning
 
-Next, for the state-level analysis to be normalized by population, US yearly census data was added to the NVSS dataset. This population data were acquired from United States Census Bureau ([2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
+Next, for the state-level analysis to be normalized by population, US yearly census data were merged with the cleaned NVSS dataset. Population data were acquired from United States Census Bureau (one dataset for [2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), another for [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
 
 These datasets were quite messy in their raw form, and required attentive data cleaning.
 
@@ -229,7 +229,7 @@ pop_2010s <- readxl::read_xlsx("pop_2010.xlsx")
 knitr::kable(head(pop_2010s), caption = "Preview of Raw Census Bureau 2010-2020 Data")
 ```
 
-To format both datasets, the column names needed to be adjusted to properly reflect the years that corresponded with the data. Certain rows also needed to be de-selected to properly align the data. `gsub()` was then used to format the state names. Finally, `pivot_longer()` was used to turn the dataframe into tidy data (each variable is a column, each row is a single observation, each cell is a single value).
+To format both datasets, the column names needed to be adjusted to properly reflect the years that corresponded with the data. Certain rows also needed to be de-selected to properly align the data. `gsub()` was then used to format the state names. Finally, `pivot_longer()` was used to turn the dataframe into tidy data (so that each variable is a column, each row is a single observation, and each cell is a single value).
 
 ```{r, message = FALSE}
 # Population of 2010s
@@ -256,7 +256,7 @@ pop_2020s <- pop_2020s %>%
     values_to = "Population")
 ```
 
-Both datasets were then combined to hold census data from 2010-2025, and `left_join()` was used to merge the population data to the NVSS table.
+Both datasets were stacked together using `cbind()` to hold census data from 2010-2025, and `left_join()` was used to merge the population data to the NVSS table.
 
 Two additional columns, `drugdeathper100k` and `syntheticdeathper100k` were created using `mutate()` to capture the number of deaths per 100,000 per year in the population from *all drug overdose deaths* and *synthetic opioids*, respectively.
 
@@ -281,7 +281,11 @@ pop_preview <- drug_deaths[c(1270, 1271),]
 knitr::kable(head(pop_preview), caption = "Preview of Merged NVSS and Census Dataset")
 ```
 
-Thus, for example, between April 2022 and April 2023, 34 drug overdose deaths per 100,000 occurred in Florida. In this example, Florida's 2023 recorded population was used for the calculation. For standardization purposes, the population used in the "per 100,000" calculations is the population of the year that the 12-month period ended in. Though this is admittedly not a perfect method, it nonetheless provides a reasonable estimate that can be used to map trends over time, aligning with the goals of this analysis.
+For standardization purposes, the population used in the "per 100,000" calculations is the population of the year that the 12-month period ended in.
+
+For example, between April 2022 and April 2023, the 7743 drug overdose deaths per 100,000 occurred in Florida. To compute this observation's corresponding `drugdeathper100k` value, Florida's recorded population size in 2023 was used in the denominator of the calculation.
+
+Though this is admittedly not a perfect method, it nonetheless provides a reasonable estimate of 12-month period overdose deaths per 100,000 that can be used to follow trends over time, aligning with the goals of this analysis.
 
 ### National & State-Level Datasets
 
@@ -307,7 +311,7 @@ as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>%
 
 ## **Exploratory Data Analysis**
 
-The first date of recorded data in the dataset is January 2015, the last date of recorded data October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process) subsection, the decision was made to include all available data in the analysis.
+The first recorded month in the dataset is January 2015, the final month with recorded data is October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process) subsection, the decision was made to include all available data in the analysis.
 
 <details>
 
@@ -319,7 +323,7 @@ summary(drug_deaths_nat$Date)
 
 </details>
 
-This dataset also includes data from all 50 US states as well as the US capitol, the District of Columbia.
+This dataset also includes data from all 50 US states as well as the District of Columbia (US Capitol).
 
 ```{r state_eda, echo = FALSE}
 # All 50 US states + District of Columbia (capital of US)
@@ -334,17 +338,17 @@ knitr::kable(states_dataset,
 
 The other variables of interest in this analysis are:
 
--   `Heroin`: Reported count of heroin overdose deaths during the 12 month-ending period.
+-   `Heroin`: Reported counts of heroin overdose deaths during the 12 month-ending period.
 
--   `Natural.SemiSynthetic`: Reported count of overdose deaths from natural or semi-synthetic opioids during the 12 month-ending period.
+-   `Natural.SemiSynthetic`: Reported counts of overdose deaths from natural or semi-synthetic opioids during the 12 month-ending period.
 
--   `Drug.Overdose`: Reported count of drug overdose deaths during the 12 month-ending period.
+-   `Synthetic`: Reported counts of overdose deaths from synthetic opioids during the 12 month-ending period.
 
--   `Synthetic`: Reported count of overdose deaths from synthetic opioids during the 12 month-ending period.
+-   `Drug.Overdose`: Reported counts of drug overdose deaths during the 12 month-ending period.
 
--   `drugdeathper100k`: Reported count of drug overdose deaths during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
+-   `drugdeathper100k`: Reported counts of drug overdose deaths during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
 
--   `syntheticdeathper100k`: Reported count of overdose deaths from synthetic opioids during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
+-   `syntheticdeathper100k`: Reported counts of overdose deaths from synthetic opioids during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
 
 ### Missing Data
 
@@ -358,7 +362,7 @@ na_counts_dplyr <- drug_deaths_nat %>%
 knitr::kable(na_counts_dplyr, caption = "Table 1: Proportion of NA Values in Each Column of Cleaned NVSS Dataset for National US Data")
 ```
 
-That being said, there is missing data in the dataset that captures state/jurisdiction-level data:
+However, the values of the national data are aggregated from the available reported state counts, and there is missing data in the dataset that captures state/jurisdiction-level data:
 
 ```{r, echo = FALSE}
 na_counts_dplyr <- drug_deaths_state %>%
@@ -409,9 +413,9 @@ knitr::kable(state_na_df,
              caption = "Table 3: Proportion of Missing Data for Each State, per Drug Count Category")
 ```
 
-Louisiana and Pennsylvania are the only two states with no `Heroin`, `Natural.SemiSynthetic`, nor `Synthetic` data. Drug overdose deaths were reported in these states, but those deaths were not categorized by their causes. Thirteen states have complete data for `Natural.SemiSynthetic` and `Synthetic`. Deaths from heroin appear to be the most under-reported in states.
+Louisiana and Pennsylvania are the only two states with no `Heroin`, `Natural.SemiSynthetic`, nor `Synthetic` data. Drug overdose deaths were reported in these states, but those deaths were not categorized by their causes. Thirteen states have complete data for `Natural.SemiSynthetic` and `Synthetic`. Deaths from heroin appear to be the most under-reported in states. It is also possible that certain states in certain years may have categorized opioid overdose deaths as general Opioid (T40.0-T40.4, T40.6) deaths, instead of the *specific opioid class* that caused the overdose death.
 
-There is also a time component, where detection and reporting systems may have improved over time—especially for synthetic opioids overdose deaths, which have become a public health concern more recently than overdoses from other drugs.
+There is also a time component that would be considered. Over the decade, detection and reporting systems may have improved to better detect specific drugs attributed to overdose cause(s) of death.
 
 ```{r data_year_plot, echo = FALSE}
 # All years have 612 observations (except for 2025 [510], because data ends in Oct)
@@ -463,30 +467,30 @@ year_na_df %>%
   scale_color_discrete(labels = c("Heroin", "Natural or Semi Synthetic",
                                   "Synthetic", "Drug Overdose")) +
   labs(color = "Drug Category",
-    y = "Proportion of NA Values",
+    y = "Proportion of Missing Values",
     title = "Figure 1: Proportion of Missing State Overdose\nDeath Data, per Drug Category") +
   theme_bw()
 ```
 
-As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 3, the drug category with the largest proportion of missing data is consistently heroin.
+As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 3, the drug category with the largest proportion of missing data is consistently heroin. Again, there is no missing drug overdose death data in any year.
 
-Based on NVSS documentation and this missing data analysis, reporting of drug overdose deaths appears to be the most consistent between different US states (overdose deaths are typically reported first and more consistently, given investigating the direct cause of death is often a more involved process and different states have different investigation processes/resource delegation for investigation). Thus, the primary focus of this analysis will focus on analyzing drug overdose data.
+Based on NVSS documentation and this missing data analysis, reporting of drug overdose deaths appears to be the most consistent between different US states. Overdose deaths are typically reported first and more consistently before cause of death is finalized, given investigating the direct cause of death is often a more involved process and different states have different investigation processes/resource delegation for investigation. Thus, the primary focus of this analysis will focus on analyzing drug overdose data.
 
 ### Exploratory Data Analysis
 
-To first begin exploring the NVSS data, the relationship between time and 12 month period drug overdose, the national number of reported drug overdose deaths per 100,000 in 12 month-ending periods were plotted against the year the period ended in.
+To first begin exploring the NVSS data, the national number of reported drug overdose deaths per 100,000 in 12 month-ending periods were plotted against the year the period ended in.
 
 ```{r, echo = FALSE}
 drug_deaths_nat %>% 
   ggplot(aes(x = factor(Year), y = Drug.Overdose)) +
   geom_boxplot(fill = "lightblue") +
   labs(x = "Year",
-       y = "Drug Overdose Deaths per 100,000",
-       title = "Figure 2: 12 Month-Ending Reported National Drug Overdose\nDeaths per 100,000 by Year, from 2015 to 2025") +
+       y = "Drug Overdose Deaths",
+       title = "Figure 2: 12 Month-Ending Reported National Drug Overdose\nDeaths by Year, from 2015 to 2025") +
   theme_bw()
 ```
 
-The years with the greatest variation in national 12 month-ending reported drug overdose deaths were 2020 and 2024. Furthermore, these boxplots show generally show the national 12 month-ending reported drug overdose deaths increasing from 2015 to 2023, because beginning to decrease from 2023 to 2025. This begins to suggest a relationship of drug overdose deaths and time.
+The years with the greatest variation (range & interquartile range) in national 12 month-ending reported drug overdose deaths were 2020 and 2024. Furthermore, these boxplots show generally show the median 12 month-ending reported drug overdose deaths per year increasing from 2015 to 2023, and then beginning to decrease from 2023 to 2025. This begins to suggest a relationship of drug overdose deaths and time.
 
 Next, the same analysis was conducted with data from the state-level dataset.
 
@@ -500,7 +504,7 @@ drug_deaths_state %>%
   theme_bw()
 ```
 
-Though not completely surprising, it is noteworthy how different Figures 2 and 3 look. The variation in 12 month-ending reported drug overdose deaths at the state level per year is much greater than at the national level. Though a general trend can be seen through time, it is somewhat masked by how large the ranges are of 12 month-ending reported drug overdose deaths in each year—especially between 2020 to 2024. This begins to suggest large variation in incident drug overdose deaths by state, something the report will further explore.
+Though not completely surprising, it is noteworthy how different Figures 2 and 3 look. The variation in 12 month-ending reported drug overdose deaths at the state level per year is much greater than at the national level. Though a general trend can be seen through time (similar to that of Figure 2, with yearly median 12 month-ending reported drug overdose deaths increasing before 2023 and decrease after), it is somewhat masked by how large the ranges are of 12 month-ending reported drug overdose deaths in each year—especially between 2020 to 2024. This begins to suggest large variation in incident drug overdose deaths by state, something the report will further explore.
 
 To further explore state variation, the ranges of the 12 month-ending reported drug overdose deaths for each state were plotted for all the available state data.
 
@@ -514,12 +518,12 @@ drug_deaths_state %>%
   geom_boxplot(fill = "lightblue") +
   labs(x = "Drug Overdose Deaths per 100,000",
        y = "State",
-    title = "Figure 4: 12 Month-Ending Reported State Drug Overdose\nDeaths per 100,000, from 2015 to 2025") +
+    title = "Figure 4: 12 Month-Ending Reported Drug Overdose\nDeaths by State, per 100,000, from 2015 to 2025") +
   scale_y_discrete(expand = expansion(mult = c(0.02, 0.02))) +
   theme_bw() +
   theme(axis.text.y = element_text(size = 5))
 ```
 
-Now, the variation of state data becomes more apparent. Though time is definitely a component of the variation that is not captured in this figure, these marginal distributions provide a strong glimpse of how varied the 12 month-ending reported drug overdoses counts are per state.
+Now, the variation of state data becomes even more apparent. Though time is definitely a component of the variation that is not captured in this figure, these marginal distributions provide a strong glimpse of how varied the 12 month-ending reported drug overdoses counts are per state.
 
-**\[write** **more about certain states vs others\]**
+For example, the District of Columbia has the largest range of 12 month-ending reported drug overdoses counts per 100,000 and the largest 12 month-ending reported drug overdoses of any month in any year (\>75). To compare, South Dakota has a significantly smaller range of 12 month-ending reported drug overdoses counts per 100,000 and saw a maximum 12 month-ending reported drug overdoses counts per 100,000 that was \<10 in all the months of collected data.

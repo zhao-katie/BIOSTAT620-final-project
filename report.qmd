@@ -37,7 +37,7 @@ opts_chunk$set(
   out.width = "700px")
 ```
 
-The US overdose deaths data were acquired from the [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) and downloaded as a `.csv` file. For every month between January 2015 to October 2025, this dataset captured the number of deaths in US jurisdictions due to drug overdose that occurred in the 12-month period ending in the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
+The [US overdose deaths data](https://www.cdc.gov/nchs/nvss/index.htm) analyzed in this report were acquired from the National Vital Statistics System (NVSS) and downloaded as a `.csv` file. For every month from January 2015 to October 2025, this dataset captured the number of deaths in US jurisdictions due to drug overdose that occurred in the 12-month period ending in the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
 
 ```{r, echo = FALSE}
 drug_deaths <- read.csv("VSRR_Provisional_Drug_Overdose_Death_Counts.csv")
@@ -96,7 +96,7 @@ drug_deaths <- drug_deaths %>%
 drug_deaths <- rbind(drug_deaths, new_york)
 ```
 
-To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data. After inspecting the `State` categories, it was decided to filter out *Puerto Rico* data. Furthermore, data for *New York City* and *New York* were combined into one category, *New York*.
+To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data. After inspecting the `State` categories, it was decided to filter out *Puerto Rico* data. Furthermore, data for *New York City* and *New York* were combined into one unified jurisdiction, *New York*.
 
 As previously mentioned, this dataset captures the monthly incident overdose deaths caused by many different classes of drugs, which are captured under the `Indicator` variable.
 
@@ -147,7 +147,7 @@ drug_deaths <- drug_deaths %>%
 
 ```
 
-Next, for the state-level analysis to be normalized by population, US yearly census data was added to the NVSS dataset. This population data were acquired from United States Census Bureau ([2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
+Next, for the state-level analysis to be normalized by population, US yearly census data was added to the NVSS dataset. These population data were acquired from United States Census Bureau ([2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
 
 After cleaning the population data, it was attatched to the NVSS table. Two additional columns, `drugdeathper100k` and `syntheticdeathper100k` were created to capture the number of deaths per 100,000 in the population from *all drug overdoses* and *synthetic opioid overdosees*, respectively.
 
@@ -190,7 +190,7 @@ drug_deaths <- drug_deaths %>%
 
 ```
 
-Finally, the NVSS data set was filtered into two separate data sets based on the `State` variable, to separate US vs state-level data.
+Finally, the NVSS dataset was filtered into two separate data sets based on the `State` variable, to separate US vs state-level data.
 
 ```{r, echo = FALSE}
 # Split into National vs State-Level Datasets
@@ -206,7 +206,7 @@ as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>%
   knitr::kable(caption = "Preview of Cleaned NVSS Dataset for State-Level Data")
 ```
 
-More details about the data collection process, data cleaning decisions for the NVSS and Population Census datasets, classifications of opioid-related deaths, and more can be found under the [About the Data](data_processing.html) tab.
+Further details about the data collection process, data cleaning decisions for the NVSS and Population Census datasets, classifications of opioid-related deaths, and more can be found under the [About the Data](data_processing.html) tab.
 
 Tools from the `plotly` and `DT` packages were used to visualize these data in the following results section.
 
@@ -263,7 +263,7 @@ drug_deaths_nat %>%
     font = list(size = 10)),
     xaxis = list(hoverformat = "<b> 12 Month-Ending Period: %B %Y </b>"),
     yaxis = list(title = "Deaths"),
-         title = "Figure 1: 12 Month-Ending Reported Drug Overdose Deaths\nin the United States by Month, from January 2015 to October 2025",
+         title = "Figure 1: 12 Month-Ending Reported Drug Overdose Deaths\nin the United States, from January 2015 to October 2025",
          margin = list(l = 40, r = 40, t = 100, b = 60))
 ```
 
@@ -271,11 +271,11 @@ drug_deaths_nat %>%
 
 Figure 1 plots the 12 month-ending reported counts of drug overdose deaths in the United States from January 2015 to October 2025 for all drugs, synthetic opioids, natural and semi-synthetic opioids, and heroin. To reiterate interpretation once more, the reported drug overdose count data of January 2015 represents the total reported number of drug overdose deaths from January 2014 to January 2015 in the US.
 
-Most notably, this figure reveals that from the end of 2016 onwards, out of the three opioid categories, synthetic opioids contribute the largest proportion of deaths to the total 12 month-ending reported overdose death counts. The trend of the total 12 month-ending drug overdose deaths also closely mirrors the trend of 12 month-ending synthetic opioid deaths. Both curves show a sharp increase in 12 month-ending deaths from 2019 to 2023, and similarly decrease from 2023 to 2025. 
+Most notably, this figure reveals that from the end of 2016 onwards, out of the three opioid categories, synthetic opioid overdoses contribute the largest proportion of deaths to the total 12 month-ending reported overdose death counts. The trend of the total 12 month-ending drug overdose deaths also closely mirrors the trend of 12 month-ending synthetic opioid deaths. Both curves show a sharp increase in 12 month-ending deaths from 2019 to 2023, and similarly decrease from 2023 to 2025. The sharp increase in overdose deaths from 2019 to 2023 also aligns with the timeframe of the COVID-19 Pandemic.
 
 This contrasts the trend of 12 month-ending reported counts of heroin deaths, which is higher than that of synthetic opioids in 2015, but plateaus and then begins decreasing in 2020. The trend of 12 month-ending reported overdose deaths from natural and semi-synthetic opioids follows a very similar pattern.
 
-That being said, it is important to recognize that the reported counts of overdose deaths (overall, and in each drug category) can be lower than the true counts \[see [Data Collection Process](data_processing.qmd#data-collection-process)\]. Furthermore, there is also missing data from certain states at certain time points regarding the specific cause-of-death drug category \[see [Missing Data](data_processing.qmd#missing-data)\]. Thus, the trendlines for synthetic, natural and semi-synthetic, and heroin in this plot are very likely underestimating true counts. However, the overall trends illuminated in this figure do provide a strong picture of the relationship between overall overdose deaths and specific causes of death, such as deaths from synthetic opioids.
+That being said, it is important to recognize that the reported counts of overdose deaths (overall, and in each drug category) can be lower than the true counts \[see [Data Collection Process](data_processing.qmd#data-collection-process)\]. Furthermore, there is also missing data from certain states at certain time points regarding the specific cause-of-death drug category \[see [Missing Data](data_processing.qmd#missing-data)\]. Thus, the trendlines for synthetic, natural and semi-synthetic, and heroin overdose deaths in this plot underestimate the true counts. However, the overall trends illuminated in this figure do provide a strong picture of the relationship between overall overdose deaths and specific causes of death, such as deaths from synthetic opioids.
 
 The general trends of Figure 1 match general reporting on Wave 3 of the US opioid epidemic, when synthetic opioids like fentanyl exploded in the illicit drug market around 2013. While overdose deaths from heroin and natural opioids wane, synthetic opioids become positioned as the strongest driver of new overdose deaths, clearly defined at the center of this modern public health crisis.
 
@@ -315,7 +315,7 @@ plot_ly(x=colnames(drug_deaths_heatmap), y=rownames(drug_deaths_heatmap),
 
 The 12 month-ending reported drug overdose deaths in each US state per 100,000 state residents are visualized in Figure 2. Unlike Figure 1, which showed a strong relationship between new drug overdose deaths and time, the most defining pattern that emerges from this heatmap isn’t related to time, but individual states.
 
-Generally, the heatmap reveals that many states experienced an increase in 12 month-ending drug overdose deaths per 100,000 between 2020 and 2023, shown by the lighter “block” in the upper half of the heatmap. This follows trends from Figure 1, where drug overdose deaths sharply increased from 2019 to 2023.
+Generally, the heatmap does reveal that many states experienced an increase in 12 month-ending drug overdose deaths per 100,000 between 2020 and 2023, shown by the lighter “block” in the upper half of the heatmap. This follows trends from Figure 1, where drug overdose deaths sharply increased from 2019 to 2023.
 
 However, the most distinct pattern of this heatmap highlights that across the decade, the District of Columbia and West Virginia consistently had significantly higher 12 month-ending overdose deaths per 100,000 compared to other US states. The number of 12 month-ending overdose deaths peaks for the District of Columbia at 94 per 100,000 in September 2023 and for West Virginia at 88 per 100,000 in April 2021.
 
@@ -393,7 +393,7 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
 
 Figure 3 explores the percent change for each US state in 12 month-ending drug overdose deaths per 100,000, comparing data from January 2015 and October 2025. This figure further highlights that the degree of severity of the modern overdose crisis varies greatly between states; there is no singular trend that every state follows.
 
-For example, some states, like Michigan and New Hampshire, saw a decrease in 12 month-ending drug overdose deaths per 100,000 (11.11% and -30.77%, respectively) when comparing reported counts from January 2015 to October 2025.
+For example, some states, like Michigan and New Hampshire, saw a decrease in 12 month-ending drug overdose deaths per 100,000 (11.11% and -30.77%, respectively) when comparing reported counts from January 2015 and October 2025.
 
 However, many more states experienced percent increases in 12 month-ending drug overdose deaths per 100,000. Overall, states on the west side of the country appeared to experience larger percentage increases in overdose deaths compared to the east side. Of particular concern are Washington and Alaska, which experienced some of the largest percent increase in 12 month-ending drug overdose deaths across the decade (178% and 159%, respectively).
 
@@ -424,15 +424,13 @@ div(
 summary(table_15_25$`Percent Change`)
 ```
 
-Only 8 states experienced decreases in 12 month-ending drug overdose deaths per 100,000 when comparing January 2015 and October 2025 data. New Hampshire and Wyoming saw the greatest decrease (-31% and -28%, respectively).
+Only eight states experienced decreases in 12 month-ending drug overdose deaths per 100,000 when comparing January 2015 and October 2025 data. New Hampshire and Wyoming saw the greatest decrease (-31% and -28%, respectively).
 
 On the other hand, 41 states experienced percent increases in 12 month-ending drug overdose deaths per 100,000. Washington, the District of Columbia, and Alaska saw the greatest percent increases (179%, 176%, and 159%, respectively).
 
 The minimum, mean, and maximum percent change in 12 month-ending drug overdose deaths per 100,000 were -31%, 41%, and 179%—highlighting the expansive range and variation in trends among the US states.
 
-That being said, there are some limitations with Figure 3 and Table 1. As seen in Figure 1, US overdose death trends revealed that 2023 was the first year since 2015 to see a decrease in 12 month-ending drug overdose deaths.
-
-However, Figure 3 masks this trend by just capturing snapshots in 2015 and 2025. Thus, an additional subanalysis will now explore the percent change in 12 month-ending drug overdose deaths in US states before and after 2023.
+That being said, there are some limitations with Figure 3 and Table 1. As seen in Figure 1, US overdose death trends revealed that 2023 was the first year since 2015 to see a decrease in 12 month-ending drug overdose deaths. However, Figure 3 masks this trend by just capturing snapshots in 2015 and 2025. Thus, an additional subanalysis will now explore the percent change in 12 month-ending drug overdose deaths in US states before and after 2023.
 
 <center>
 
@@ -481,7 +479,7 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
 
 </center>
 
-Using 2023 as the critical point, Figure 4a visualizes the percent change for each US state in 12 month-ending drug overdose deaths per 100,000, comparing January 2015 and January 2023 data. Figure 4b covers the same percent change between January 2023 and October 2025.
+Using 2023 as the critical inflection point, Figure 4a visualizes the percent change for each US state in 12 month-ending drug overdose deaths per 100,000, comparing January 2015 and January 2023 data. Figure 4b covers the same percent change between January 2023 and October 2025.
 
 Figure 4a unveils some of the trends missed in Figure 3. Between 2015 and 2023, Utah was the only state to see a decrease in 12 month-ending drug overdose deaths; many more states experienced an overwhelming increase in 12 month-ending drug overdose deaths.
 
@@ -523,13 +521,13 @@ When comparing January 2023 to October 2025 data, the opposite trend is seen: a 
 
 ### State Specific Trends
 
-To more closely hone-in on distinct state trends, this section will focus on the drug overdose death trends of three states identified from the [State-Level Trends](report.qmd#state-level-trends-1) reporting:
+To more closely hone-in on distinct state trends, this section will focus on the unique drug overdose death trends of three states identified from the [State-Level Trend](report.qmd#state-level-trends-1)[ Results](report.qmd#state-level-trends-1):
 
 1.  **District of Columbia**: The District of Columbia saw the highest reported count of 12 month-ending drug overdose deaths per 100,000 among any US state across the decade \[Figure 2\]. This district also experienced the greatest percent increase in 12 month-ending drug overdose deaths per 100,000, comparing January 2015 to January 2023 \[Table 2\].
 
 2.  **Washington**: Washington saw the greatest percent increase in 12 month-ending drug overdose deaths per 100,000 between January 2015 and October 2025 \[Table 1\]. Furthermore, it was one of only five states to still see a percent increase in 12 month-ending overdose deaths per 100,000 between January 2023 and October 2025 \[Table 2\].
 
-3.  **Vermont**: Vermont experienced the second-highest percent increase in 12 month-ending overdose deaths per 100,000 between January 2015 and January 2023 \[Table 2\]. However, it also experienced the sixth greatest percent decrease in 12 month-ending overdose deaths per 100,000 between January 2023 and October 2025 \[Table 2\].
+3.  **Vermont**: Vermont experienced the second-highest percent increase in 12 month-ending overdose deaths per 100,000 between January 2015 and January 2023 \[Table 2\]. However, it also experienced the seventh greatest percent decrease in 12 month-ending overdose deaths per 100,000 between January 2023 and October 2025 \[Table 2\].
 
 <center>
 
@@ -571,11 +569,11 @@ drug_states %>%
 
 Across the decade, Figure 5 clearly visualizes the distinct differences in the trends of 12 month-ending overdose deaths per 100,000 between these three states/districts.
 
-The District of Columbia consistently had a higher 12 month-ending overdose death count compared to Washington and Vermont. While reported counts rose rapidly from 2019 to 2023, the number of reported 12 month-ending overdose deaths also sharply decreased from September 2023 onwards (generally matching national trends).
+The District of Columbia consistently had higher 12 month-ending overdose death counts compared to Washington and Vermont. While reported counts rose rapidly from 2019 to 2023, the number of reported 12 month-ending overdose deaths also sharply decreased from September 2023 onwards (generally matching national trends).
 
-Washington began January 2015 with a very low reported count of 12 month-ending overdose deaths out of the three states, but those numbers began steadily rising starting from 2020 onwards. The reported counts of Washington’s 12 month-ending overdose deaths decreased slightly and plateaued at the start of 2024, but saw nowhere near the decrease of that of the District of Columbia (or Vermont).
+Washington began January 2015 with a low reported count of 12 month-ending overdose deaths, but those numbers began steadily rising starting from 2020 onwards. The reported counts of Washington’s 12 month-ending overdose deaths decreased slightly and plateaued at the start of 2024, but saw nowhere near the decrease of that of the District of Columbia (or Vermont).
 
-Vermont, like Washington, begins the decade with a low reported count of 12 month-ending overdose deaths, only for those numbers to sharply increase from 2020 to 2023. However, unlike Washington, Vermont experiences a very sharp decrease in 12 month-ending overdose deaths from April 2023 onwards.
+Vermont, like Washington, began the decade with the lowest reported count of 12 month-ending overdose deaths out of the three states, only for those counts to sharply increase from 2020 to 2023. However, unlike Washington, Vermont also experienced a very sharp decrease in 12 month-ending overdose deaths from April 2023 onwards.
 
 Because these three states all have complete reported data for overdose deaths attributed to synthetic opioids, Figures 6 compares the total 12 month-ending drug overdose deaths to 12 month-ending synthetic opioid overdose deaths in the different states.
 
@@ -764,7 +762,7 @@ fig <- fig %>%
       font = list(size = 10)),
     xaxis = list(hoverformat = "<b> 12 Month-Ending Period: %B %Y </b>"),
     title = list(
-      text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths\n", states[1], ", from January 2015 to October 2025"),  # initial title
+      text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths in\n", states[1], ", from January 2015 to October 2025"),  # initial title
       y = 0.87,
       yanchor = "top"
     ),
@@ -802,21 +800,21 @@ fig <- fig %>%
 fig
 ```
 
-Though the trends of 12 month-ending overdose deaths per 100,000 between the District of Columbia, Vermont, and Washington are very different, Figures 6a-6c all share a striking similarity: deaths from synthetic opioid overdoses appear to be a very significant driver of the overall 12 month-ending overdose deaths trends in these states.
+Though the trends of 12 month-ending overdose deaths per 100,000 between the District of Columbia, Vermont, and Washington are very different, Figures 6 does reveals one striking similarity: deaths from synthetic opioid overdoses appear to be a very significant driver of the overall 12 month-ending overdose deaths trends in these three jursidictions.
 
-Similar to Figure 1, the trendlines of the 12 month-ending overdose deaths very closely match the trendline shapes of the 12 month-ending synthetic opioid overdose deaths. Furthermore, starting around 2018 (2022 for Washington), for each month in these states, the 12 month-ending reported overdose deaths from synthetic opioids make up a clear majority of the 12 month-ending reported drug overdose deaths.
+Similar to Figure 1, the trendlines of the 12 month-ending overdose deaths very closely match the trendline shapes of the 12 month-ending synthetic opioid overdose deaths. Furthermore, starting around 2018 (2022 for Washington), for each month in these states, the 12 month-ending reported overdose deaths from synthetic opioids make up a clear majority of the total 12 month-ending reported drug overdose deaths.
 
 ## **Conclusion**
 
-Using NVSS data that captured the 12 month-ending reported drug overdose deaths of US jurisdictions from January 2015 to October 2025, the primary objective of this analysis was to study trends of synthetic opioid overdose deaths and overall drug overdose deaths across the decade, both at the national and state level. Secondary analysis focused on specific states with unique overdose trends.
+Using NVSS data that captured the 12 month-ending reported drug overdose deaths of US jurisdictions from January 2015 to October 2025, the primary objective of this analysis was to study trends of synthetic opioid overdose deaths and overall drug overdose deaths across the decade, at the national and state level. Secondary analysis focused on specific states with unique overdose trends.
 
-Overall, this analysis revealed that during this decade, synthetic opioid overdose deaths were a large contributor to total overdose deaths in 12 month periods in the United States. Overdose deaths from all drugs and synthetic opioids in 12 month periods increased from 2015 to 2023, with a notably rapid increase between 2020 and 2023. This aligns with other research that has noted the 2020 COVID-19 Pandemic’s negative impact on the overdose crisis \[1\]. However, towards the latter half of 2023, overdose deaths from all drugs and synthetic opioids in 12 month periods began steadily decreasing.
+Overall, this analysis revealed that during this decade, synthetic opioid overdose deaths were a large contributor to total overdose deaths in 12 month periods in the United States. Overdose deaths from all drugs as well as synthetic opioids *in 12 month periods* increased from 2015 to 2023, with a notably rapid increase between 2020 and 2023 \[Figure 1\]. This aligns with other research that has noted the 2020 COVID-19 Pandemic’s negative impact on the overdose crisis \[1\]. However, towards the latter half of 2023, overdose deaths from all drugs and synthetic opioids in 12 month periods began steadily decreasing \[Figure 1\].
 
-While analysis at the national level revealed a general relationship between the progression of time and the number of reported drug overdoses in 12 month periods, there was still much inter-state variability in these trends. Some states experienced large percent increases in 12 month-ending drug overdose deaths between January 2015 and October 2025, while others experienced notable decreases. Furthermore, the magnitude of the percent increases / decreases were quite varied as well. When broken up by percent changes in 12 month-ending drug overdose deaths per state before and after January 2023, similar variation was observed.
+While analysis at the national level revealed a general relationship between the progression of time and the number of reported drug overdoses in 12 month periods, there was still much inter-state variability in these trends. Some states experienced large percent increases in 12 month-ending drug overdose deaths between January 2015 and October 2025, while others experienced notable decreases \[Figure 3\]. Furthermore, the magnitudes of the percent increases / decreases were quite varied as well. When broken up by percent changes in 12 month-ending drug overdose deaths per state before and after January 2023, similar variation was observed \[Figure 4a and Figure 4b\].
 
 Finally, specific analysis of three US jurisdictions further highlighted varying trends in 12 month-ending drug overdose deaths across the decade, but all showed a strong relationship between total overdose deaths and synthetic opioid overdose deaths. In the latter half of the decade, as 12 month-ending synthetic opioid overdose deaths increased, so did the 12 month-ending drug overdose deaths, and vice-versa for decreases.
 
-The major limitation of this study comes from the nature of reported mortality data for drug overdoses and the variance in reporting procedures in different states. As indicated by the [Missing Data](data_processing.qmd#missing-data) tab, there were states with missing data for the number of reported deaths attributed to specific opioid overdoses in 12 month periods. Thus, for example, Figure 1 underrepresents the true counts of overdose deaths per 12 month periods from the specific opioid classes. Furthermore, the primary "unit" of data, deaths in 12 month-ending periods, is inherently a less intuitive measurement (than, say incident deaths per month). Yet, despite these limtations, these data do help illustrate overall trends that are useful for hypothesis generation and policy development.
+The major limitation of this study comes from the nature of reported mortality data for drug overdoses and the variance in reporting procedures in different states \[see [Data Collection Process](data_processing.qmd#data-collection-process)\]. Furthermore, as indicated by the [Missing Data](data_processing.qmd#missing-data) tab, there were states with missing data for the number of reported deaths attributed to specific opioid overdoses in 12 month periods. Thus, for example, Figure 1 underrepresents the true counts of overdose deaths per 12 month periods from the specific opioid classes. Furthermore, the primary "unit" of data, deaths in 12 month-ending periods, is inherently a less intuitive measurement (than, say incident deaths per month). Yet, despite these limtations, these data do help illustrate overall trends that are useful for hypothesis generation and policy development.
 
 With a strong understanding of how tied the United States’ drug overdose crisis is to synthetic opioids overdoses, it is worth qualitatively considering the trends seen in the District of Columbia and Vermont, which can illuminate what policies may be consequential in synthetic opioid overdose intervention. Both jurisdictions saw rapid increases in synthetic opioid (and total) drug overdose deaths prior to 2023, but also experienced sharp decreases in reported overdose death counts from 2023 onward.
 
@@ -826,9 +824,9 @@ Similar initiatives have taken place in Vermont. As of December 2023, some criti
 
 It is also important to recognize work being done at the federal level to fight the modern opioid epidemic. Since 2020, the Opioid Rapid Response Program ([ORRP](https://www.cdc.gov/overdose-prevention/orrp/index.html)) has been a program formally managed by the Centers for Disease Control and Prevention (CDC) to reduce opioid deaths. The ORRP “*enhance\[s\] rapid response and risk mitigation when disruptions occur that have the potential to increase overdose risk among affected patients*” \[5\]. In March 2023, the Food and Drug Administration (FDA) also approved the first over-the-counter Naloxone nasal spray, which can be administered without medical training to reduce opioid deaths \[6\].
 
-Though it may be too soon to fully evaluate the impact of these overdose prevention strategies at the state and federal level, it is clear government systems are intentionally addressing this crisis with meaningful policy and programs. There is, of course, still work to be done: at the national level, the 12 month-ending drug overdose death counts were still higher in October 2025 than in January 2015.
+Though it may be too soon to fully evaluate the impact of these overdose prevention strategies at the state and federal level, it is clear government systems are intentionally addressing this crisis with meaningful policy and programs. There is, of course, still work to be done: at the national level, the 12 month-ending drug overdose reported death count was still higher in October 2025 than in January 2015.
 
-As policymakers and government leaders continue to work on reducing synthetic opioid overdose deaths in communities, future research could focus on evaluating programs in jurisdictions like the District of Columbia and Vermont (where decreases in overdose deaths have been seen) and on how to implement such initiatives in other US states.
+As policymakers and government leaders continue to work on reducing synthetic opioid overdose deaths in communities, future research could focus on evaluating programs in jurisdictions like the District of Columbia and Vermont (where decreases in overdose deaths have been observed) and on how to implement such initiatives in other US states.
 
 ------------------------------------------------------------------------
 
