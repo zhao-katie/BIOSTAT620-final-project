@@ -11,13 +11,13 @@ embed-resources: true
 
 ## **NVSS Drug Overdose Data**
 
-The data analyzed in this study comes from [reported drug overdose mortality data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) monitored by the United States National Vital Statistics System (NVSS). The NVSS is an inter-governmental system designed to share data on vital statistics (births, deaths, marriages, etc) of jurisdictions of the United States.
+The data analyzed in this study comes from [reported drug overdose mortality data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data){target="_blank"} monitored by the United States National Vital Statistics System (NVSS). The NVSS is an inter-governmental system designed to share data on vital statistics (births, deaths, marriages, etc) of jurisdictions of the United States.
 
 Reported provisional counts in the dataset indicate the number of deaths due to drug overdose that occurred in the 12-month period ending of the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
 
 Reported counts were available for total overdose deaths and drug-specific overdose deaths, at the national and state-level. Deaths were reported for the US jurisdiction in which the death occurred.
 
-Additional documentation from NVSS can be found [here](https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm#ref8).
+Additional documentation from NVSS can be found [here](https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm#ref8){target="_blank"}.
 
 ### Data Collection Process
 
@@ -39,7 +39,7 @@ Thus, given that the primary goal of this analysis was to explore overall US dru
 
 ### NVSS Dataset Cleaning
 
-The [US overdose deaths data](https://www.cdc.gov/nchs/nvss/index.htm) were acquired from the National Vital Statistics System (NVSS) and downloaded as a `.csv` file.
+The [US overdose deaths data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data){target="_blank"} were acquired from the National Vital Statistics System (NVSS) and downloaded as a `.csv` file.
 
 These eight packages were used in the data cleaning, wrangling, and visualization steps of the report:
 
@@ -196,13 +196,13 @@ drug_deaths <- drug_deaths %>%
   mutate(Indicator = case_when(
     Indicator == "Heroin (T40.1)" ~ "Heroin",
     Indicator == "Number of Drug Overdose Deaths" ~ "Drug.Overdose",
-    Indicator == "Natural & semi-synthetic opioids (T40.2)" ~ "Natural.Synthetic",
+    Indicator == "Natural & semi-synthetic opioids (T40.2)" ~ "Natural.SemiSynthetic",
     TRUE ~ "Synthetic"
   ))
 
 drug_deaths$Indicator <- with(drug_deaths, 
                               factor(Indicator, 
-                                     levels = c("Heroin", "Natural.Synthetic",
+                                     levels = c("Heroin", "Natural.SemiSynthetic",
                                                 "Synthetic",
                                                 "Drug.Overdose")))
 
@@ -220,7 +220,7 @@ as.data.frame(head(preview2)) %>%
 
 ### US Population Data Cleaning
 
-Next, for the state-level analysis to be normalized by population, US yearly census data were merged with the cleaned NVSS dataset. Population data were acquired from United States Census Bureau (one dataset for [2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), another for [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
+Next, for the state-level analysis to be normalized by population, US yearly census data were merged with the cleaned NVSS dataset. Population data were acquired from United States Census Bureau (one dataset for [2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html){target="_blank"}, another for [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html){target="_blank"}) and downloaded as `.xlsx` files.
 
 These datasets were quite messy in their raw form, and required attentive data cleaning.
 
@@ -307,11 +307,11 @@ as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>%
 
 ------------------------------------------------------------------------
 
-\[1\] <https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html>
+\[1\] <https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html>{target="_blank"}
 
 ## **Exploratory Data Analysis**
 
-The first recorded month in the dataset is January 2015, the final month with recorded data is October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process) subsection, the decision was made to include all available data in the analysis.
+The first recorded month in the dataset is January 2015, the final month with recorded data is October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process){target="_blank"} subsection, the decision was made to include all available data in the analysis.
 
 <details>
 
@@ -394,7 +394,7 @@ for (state in unique(drug_deaths_state$State)){
   heroin_na <- append(heroin_na, 
                       round(sum(is.na(state_df$Heroin))/len, 2))
   natural_na <- append(natural_na, 
-                       round(sum(is.na(state_df$Natural.Synthetic))/len, 2))
+                       round(sum(is.na(state_df$Natural.SemiSynthetic))/len, 2))
   drug_na <- append(drug_na, 
                     round(sum(is.na(state_df$Drug.Overdose))/len, 2))
   synthetic_na <- append(synthetic_na, 
@@ -436,7 +436,7 @@ for (year in unique(drug_deaths_state$Year)){
   heroin_na <- append(heroin_na, 
                       round(sum(is.na(year_df$Heroin))/len, 2))
   natural_na <- append(natural_na, 
-                       round(sum(is.na(year_df$Natural.Synthetic))/len, 2))
+                       round(sum(is.na(year_df$Natural.SemiSynthetic))/len, 2))
   drug_na <- append(drug_na, 
                     round(sum(is.na(year_df$Drug.Overdose))/len, 2))
   synthetic_na <- append(synthetic_na, 

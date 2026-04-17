@@ -1,6 +1,0 @@
-"0","drug_deaths <- read.csv(""VSRR_Provisional_Drug_Overdose_Death_Counts.csv"")"
-"0",""
-"0","drug_deaths_preview <- drug_deaths[c(74231, 30021), ] %>% "
-"0","  as.tibble()"
-"0",""
-"0","knitr::kable(head(drug_deaths_preview, 2), caption = ""Preview of Raw NVSS Dataset"")"
