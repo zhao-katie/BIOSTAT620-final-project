@@ -1,0 +1,2 @@
+"0","pop_2010s <- readxl::read_xlsx(""pop_2010.xlsx"")"
+"0","knitr::kable(head(pop_2010s), caption = ""Preview of Raw Census Bureau 2010-2020 Data"")"

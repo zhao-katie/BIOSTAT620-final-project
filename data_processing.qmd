@@ -1,0 +1,521 @@
+---
+title: "About the Data"
+format: 
+  html:
+    code-fold: true
+    fontsize: 1.1em
+editor: visual
+toc: true
+embed-resources: true
+---
+
+## **NVSS Drug Overdose Data**
+
+The data analyzed in this study comes from the [reported drug overdose death mortality data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) monitored by the United States National Vital Statistics System (NVSS). The NVSS is an inter-governmental system designed to share data on vital statistics (births, deaths, marriages, etc) of jurisdictions of the United States.
+
+Reported provisional counts in the dataset represent the number of deaths due to drug overdose that occurred in the 12-month period ending in the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
+
+Reported counts were available for total overdose deaths and drug-specific overdose deaths, at the national and state-level. Deaths were reported for the US jurisdiction in which the death occurred.
+
+More detailed documentation can be found [here](https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm#ref8).
+
+### Data Collection Process
+
+There is typically a lag time between when deaths occurred and when the mortality data cause of death in the NVSS surveillance database updated. Drug overdose deaths are often reported initially without a cause of death because toxicology testing can sometimes be a lengthy process. For drug overdose-related deaths, the latent period between death and reporting to NVSS is typically 4-6 months\*.
+
+It is also important to recognize that these data are often incomplete, and the degree of completeness varies by each US jurisdiction. Thus, the number of drug overdose deaths *are often underestimated* based on reported data relative to the true counts, and are subject to random variation.
+
+That being said, these data are still very valuable; the goal of analyzing these data is surveillance and monitoring of emerging public health trends.
+
+*\*For this report (conducted April 2026), the last month with reported drug overdose deaths data in the selected NVSS dataset was October 2025. Based on the data documentation, it was deemed appropriate to include all the data from January 2015 up to October 2025 in the analysis.*
+
+### Reported vs Predicted Values
+
+To address the discrepancies between reported and true counts, methods were developed to adjust reported counts for reporting delays by generating a set of predicted counts in the dataset.
+
+NVSS data documentation states, “*State predicted drug overdose death counts differed by an average of 0.1% (ranging from 0.0 to 0.5%). National predicted counts for deaths involving opioids had a difference of 0.1%, while state predicted counts had an average difference of 0.3% (ranging from 0.3 to 2.9%).*”
+
+Thus, given that the primary goal of this analysis was to explore overall US drug overdose death trends over time (2015-2025) and the percent differences between reported and predicted values were small (compared to the percent changes in counts over time, as seen in the report), the decision was made to focus the report’s analysis on the reported counts in the dataset.
+
+### NVSS Dataset Cleaning
+
+The US overdose deaths data were acquired from the [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) and downloaded as a `.csv` file.
+
+These eight packages were used in the data cleaning, wrangling, and visualization steps of the report:
+
+```{r setup, message = FALSE}
+#| code-fold: FALSE
+library(tidyverse)
+library(readr)
+library(lubridate)
+library(plotly)
+library(knitr)
+library(tidyr)
+library(DT)
+library(htmltools)
+```
+
+```{r setup1, echo = FALSE, message = FALSE}
+opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  eval=TRUE, ### SET THIS TO TRUE TO RUN ALL CODE ###
+  echo = TRUE,
+  cache=FALSE,
+  include=TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618,
+  out.width = "700px")
+```
+
+```{r, echo = FALSE}
+drug_deaths <- read.csv("VSRR_Provisional_Drug_Overdose_Death_Counts.csv")
+
+drug_deaths_preview <- drug_deaths[c(74231, 30021), ] %>% 
+  as.tibble()
+
+knitr::kable(head(drug_deaths_preview, 2), caption = "Preview of Raw NVSS Dataset")
+```
+
+To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data as a **`Date`** (time) variable.
+
+```{r begin.cleaning}
+drug_deaths <- drug_deaths %>% 
+  select(c(1:6, 9)) %>% 
+  mutate(Deaths = as.numeric(parse_number(Data.Value)),
+         Date = my(paste(Month, Year, sep = ",")),
+         State.Abb = State,
+         State = State.Name) %>% 
+  relocate(Month, .before = Year) %>% 
+  relocate(Date, .after = Year) %>% 
+  relocate(Deaths, .after = Indicator) %>% 
+  relocate(State.Abb, .before = State)
+drug_deaths$Data.Value <- NULL
+drug_deaths$State.Name <- NULL
+
+# Remove "Period" column because all values are the same
+# table(drug_deaths$Period)
+drug_deaths$Period <- NULL
+```
+
+```{r, echo = FALSE}
+# Look at "State.Name": Notice District of Columbia, Puerto Rico, United States, and New York City
+states_dataset <- matrix(unique(drug_deaths$State), 
+                         ncol = 9, nrow = 6) %>% 
+  as.data.frame() 
+colnames(states_dataset) <- NULL
+knitr::kable(states_dataset, 
+             caption = "US Jursidictions Captured in NVSS Dataset")
+```
+
+Inspecting the unique US jurisdictions under the `State` column revealed four non-traditional categories: Puerto Rico, United States, District of Columbia, and New York City.
+
+Given the NVSS documentation, “*the total death count for the United States does not include deaths occurring in Puerto Rico*,” it was decided to exclude Puerto Rico data from this analysis.
+
+Data for *New York City* and *New York* were combined into one category, *New York*. Data corresponding to the *District of Columbia* was maintained in the dataset, given that these data did contribute to the national overdose death totals.
+
+```{r}
+# The total death count for the United States does not include deaths occurring in Puerto Rico.
+drug_deaths <- drug_deaths %>% 
+  filter(!State == "Puerto Rico")
+
+# Combine New York City and New York together:
+new_york <- drug_deaths %>% 
+  filter(State == "New York" | State == "New York City")
+new_york$State <- NULL
+
+new_york <- new_york %>% pivot_wider(names_from = State.Abb,
+                                      values_from = Deaths) %>%
+  mutate(Deaths = NY + YC)
+new_york <- new_york %>% 
+  select(Month, Year, Date, Indicator, Deaths) %>% 
+  mutate(State.Abb = rep("NY", dim(new_york)[1]),
+         State = rep("New York", dim(new_york)[1])) %>% 
+  relocate(c(State.Abb, State), .before = Month) 
+
+# Add in "New York" (state) values back to dataset
+drug_deaths <- drug_deaths %>% 
+  filter(State != "New York") %>% 
+    filter(State != "New York City") 
+drug_deaths <- rbind(drug_deaths, new_york)
+```
+
+```{r preview_clean, echo = FALSE}
+
+drug_deaths_preview <- drug_deaths[c(400, 64733), ] %>% 
+  as.tibble()
+
+knitr::kable(head(drug_deaths_preview), caption = "Preview of Cleaned NVSS Dataset")
+```
+
+### Causes of Drug Overdose Death
+
+In total, this dataset captured 12 different causes/dimensions of overdose death data in the `Indicators` column:
+
+```{r preview_indicators, echo = FALSE}
+indicators <- unique(drug_deaths$Indicator) %>% 
+  as.data.frame()
+
+colnames(indicators) <- c("Causes of Overdose Death")
+
+knitr::kable(indicators, caption = "Causes of Overdose Deaths captured in the NVSS Dataset")
+```
+
+Of the available overdose death data available in the dataset, this analysis focused on four categories that captured yearly counts of overdose deaths related to different opioid classes:
+
+1.  *Heroin (T40.1)*
+2.  *Natural & semi-synthetic opioids (T40.2)*
+3.  *Synthetic opioids, excl. methadone (T40.4)*
+4.  *Number of Drug Overdose Deaths* \[to serve as a comparison\]
+
+Heroin, natural & semi-synthetic opioids, and synthetic opioids were selected for this analysis because of their corresponding significance to different “waves” of the US opioid overdose epidemic.
+
+The opioid overdose crisis began in the 1990s with the overprescription of “prescription opioids,” such as hydrocodone, oxycodone, and morphine. These prescription opioids belong to the class *natural & semi-synthetic opioids*, which are derived and modified compounds originating from the opium poppy plant.
+
+The second wave of the opioid epidemic began in 2010 when deaths attributed to *heroin* overdoses started rapidly increasing. Heroin is a highly addictive derivative of morphine.
+
+The third wave of the crisis is defined by the emergence and saturation of *synthetic opioids*, like fentanyl and tramadol, in the illegal drug market. These synthetic opioids are extremely potent and subject to high overdose risk.
+
+Deaths due to each of these opioids are associated with an International Statistical Classification of Diseases and Related Health Problems (ICD) Code. ICD provides standardized guidance used in almost every country to code and classify causes of death. Thus, deaths due to heroin overdose are categorized as T40.1, natural & semi-synthetic opioids deaths as T40.2, etc.
+
+Deaths where “opioid” was reported as the cause without more specific information were assigned the general ICD-10 code T40.0–T40.4. These were not included in the analysis given the lack of specificity.
+
+As expected, drug overdose deaths can also involve multiple drugs. Following ICD standards, such a death may be included in more than one category when describing the number of overdose deaths associated with a specific class of drug. For example, a death involving heroin and fentanyl would be coded as T40.1 and T40.4 and appear as a count in both categorizations.
+
+`pivot_wider()` was then used to create column headers defined by the causes of death.
+
+```{r indicators}
+
+# Filter to indicators of interest
+drug_deaths <- drug_deaths %>% 
+  filter(Indicator == "Heroin (T40.1)" | 
+           Indicator == "Number of Drug Overdose Deaths" |
+           Indicator == "Natural & semi-synthetic opioids (T40.2)" |
+           Indicator == "Synthetic opioids, excl. methadone (T40.4)") %>% 
+  mutate(Indicator = case_when(
+    Indicator == "Heroin (T40.1)" ~ "Heroin",
+    Indicator == "Number of Drug Overdose Deaths" ~ "Drug.Overdose",
+    Indicator == "Natural & semi-synthetic opioids (T40.2)" ~ "Natural.Synthetic",
+    TRUE ~ "Synthetic"
+  ))
+
+drug_deaths$Indicator <- with(drug_deaths, 
+                              factor(Indicator, 
+                                     levels = c("Heroin", "Natural.Synthetic",
+                                                "Synthetic",
+                                                "Drug.Overdose")))
+
+drug_deaths <- drug_deaths %>% 
+  pivot_wider(names_from = Indicator,
+              values_from = Deaths)
+
+```
+
+```{r, echo = FALSE}
+preview2 <- drug_deaths[c(4965, 4792), ]
+as.data.frame(head(preview2)) %>% 
+  knitr::kable(caption = "Preview of Cleaned NVSS Dataset to Indicators of Interest")
+```
+
+### US Population Data Cleaning
+
+Next, for the state-level analysis to be normalized by population, US yearly census data was added to the NVSS dataset. This population data were acquired from United States Census Bureau ([2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
+
+These datasets were quite messy in their raw form, and required attentive data cleaning.
+
+```{r, echo = FALSE}
+pop_2010s <- readxl::read_xlsx("pop_2010.xlsx")
+knitr::kable(head(pop_2010s), caption = "Preview of Raw Census Bureau 2010-2020 Data")
+```
+
+To format both datasets, the column names needed to be adjusted to properly reflect the years that corresponded with the data. Certain rows also needed to be de-selected to properly align the data. `gsub()` was then used to format the state names. Finally, `pivot_longer()` was used to turn the dataframe into tidy data (each variable is a column, each row is a single observation, each cell is a single value).
+
+```{r, message = FALSE}
+# Population of 2010s
+pop_2010s <- pop_2010s %>% select(-2)
+colnames(pop_2010s) <- c("State", seq(2010, 2020, 1))
+pop_2010s <- pop_2010s[-c(1:3, 5:8, 60:67),]
+pop_2010s$State <- gsub("\\.", "", pop_2010s$State)
+pop_2010s <- pop_2010s %>% 
+  mutate(across(`2010`:`2020`, as.numeric)) %>% 
+  pivot_longer(cols = `2010`:`2020`,
+    names_to = "Year",
+    values_to = "Population")
+
+# Population of 2020s
+pop_2020s <- readxl::read_xlsx("pop_2020.xlsx")
+pop_2020s <- pop_2020s %>% select(-c(2:3))
+colnames(pop_2020s) <- c("State", seq(2021, 2025, 1))
+pop_2020s <- pop_2020s[-c(1:3, 5:8, 60:67),]
+pop_2020s$State <- gsub("\\.", "", pop_2020s$State)
+pop_2020s <- pop_2020s %>% 
+  mutate(across(`2021`:`2025`, as.numeric)) %>% 
+  pivot_longer(cols = `2021`:`2025`,
+    names_to = "Year",
+    values_to = "Population")
+```
+
+Both datasets were then combined to hold census data from 2010-2025, and `left_join()` was used to merge the population data to the NVSS table.
+
+Two additional columns, `drugdeathper100k` and `syntheticdeathper100k` were created using `mutate()` to capture the number of deaths per 100,000 per year in the population from *all drug overdose deaths* and *synthetic opioids*, respectively.
+
+```{r, message = FALSE}
+
+pop <- rbind(pop_2010s, pop_2020s) %>% 
+  mutate(Year = as.numeric(Year))
+
+# Adding Population to drug_deaths
+drug_deaths <- left_join(drug_deaths, pop, 
+          by = c("State", "Year"))
+
+# Creating "drugdeathper100k"
+drug_deaths <- drug_deaths %>% 
+  mutate(drugdeathper100k = round((Drug.Overdose/Population)*100000)) %>% 
+  mutate(syntheticdeathper100k = round((Synthetic/Population)*100000))
+
+```
+
+```{r, echo = FALSE}
+pop_preview <- drug_deaths[c(1270, 1271),]
+knitr::kable(head(pop_preview), caption = "Preview of Merged NVSS and Census Dataset")
+```
+
+Thus, for example, between April 2022 and April 2023, 34 drug overdose deaths per 100,000 occurred in Florida. In this example, Florida's 2023 recorded population was used for the calculation. For standardization purposes, the population used in the "per 100,000" calculations is the population of the year that the 12-month period ended in. Though this is admittedly not a perfect method, it nonetheless provides a reasonable estimate that can be used to map trends over time, aligning with the goals of this analysis.
+
+### National & State-Level Datasets
+
+Finally, the NVSS data set was filtered into two separate data sets based on the `State` variable, to separate US vs state-level data.
+
+```{r}
+# Split into National vs State-Level Datasets
+drug_deaths_nat <- drug_deaths %>% filter(State.Abb == "US")
+drug_deaths_state <- drug_deaths %>% filter(State.Abb != "US")
+```
+
+```{r, echo = FALSE}
+as.data.frame(head(drug_deaths_nat, 3)) %>% 
+  knitr::kable(caption = "Preview of Cleaned NVSS Dataset for US Data")
+
+as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>% 
+  knitr::kable(caption = "Preview of Cleaned NVSS Dataset for State-Level Data")
+```
+
+## **Exploratory Data Analysis**
+
+The first date of recorded data in the dataset is January 2015, the last date of recorded data October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process) subsection, the decision was made to include all available data in the analysis.
+
+<details>
+
+<summary>`Date` Data Summary</summary>
+
+```{r date_eda}
+summary(drug_deaths_nat$Date)
+```
+
+</details>
+
+This dataset also includes data from all 50 US states as well as the US capitol, the District of Columbia.
+
+```{r state_eda, echo = FALSE}
+# All 50 US states + District of Columbia (capital of US)
+
+states_dataset <- matrix(c(unique(drug_deaths_state$State), rep(" ", 4)), 
+                         ncol = 11, nrow = 5) %>% 
+  as.data.frame() 
+colnames(states_dataset) <- NULL
+knitr::kable(states_dataset, 
+             caption = "US Jursidictions Captured in Cleaned NVSS Dataset")
+```
+
+The other variables of interest in this analysis are:
+
+-   `Heroin`: Reported count of heroin overdose deaths during the 12 month-ending period.
+
+-   `Natural.SemiSynthetic`: Reported count of overdose deaths from natural or semi-synthetic opioids during the 12 month-ending period.
+
+-   `Drug.Overdose`: Reported count of drug overdose deaths during the 12 month-ending period.
+
+-   `Synthetic`: Reported count of overdose deaths from synthetic opioids during the 12 month-ending period.
+
+-   `drugdeathper100k`: Reported count of drug overdose deaths during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
+
+-   `syntheticdeathper100k`: Reported count of overdose deaths from synthetic opioids during the 12 month-ending period per 100,000 (based on the yearly population of the last month in the 12 month period).
+
+### Missing Data
+
+There is no missing data in the dataset that captures country-level data:
+
+```{r nat_na, echo = FALSE}
+# Count NA values in each column using dplyr
+na_counts_dplyr <- drug_deaths_nat %>%
+  summarise_all(~ round(sum(is.na(.))/nrow(drug_deaths_nat),2))
+
+knitr::kable(na_counts_dplyr, caption = "Proportion of NA Values in Each Column of Cleaned NVSS Dataset for National US Data")
+```
+
+That being said, there is missing data in the dataset that captures state/jurisdiction-level data:
+
+```{r, echo = FALSE}
+na_counts_dplyr <- drug_deaths_state %>%
+  summarise_all(~ round(sum(is.na(.))/nrow(drug_deaths_state),2))
+
+knitr::kable(na_counts_dplyr, caption = "Proportion of NA Values in Each Column of Cleaned NVSS Dataset for State-Level Data")
+```
+
+As acknowledged in the NVSS data documentation, each state does have different policies / procedures for reporting causes of mortality. While there are no `Drug.Overdose` missing data, there are missing data for the columns `Heroin`, `Natural.SemiSynthetic`, and `Synthetic` (as well as `syntheticdeathper100k`, given it is calculated from `Synthetic`).
+
+```{r state_na, echo = FALSE}
+
+# Every state has the same equal number of observations in the dataset 
+# [130 months]
+# table(drug_deaths_state$State) %>% as.data.frame() 
+
+state_name <- c()
+heroin_na <- c()
+natural_na <- c()
+drug_na <- c()
+synthetic_na <- c()
+
+
+for (state in unique(drug_deaths_state$State)){
+  state_df <- drug_deaths %>% filter(State == state)
+  len <- nrow(state_df)
+  ##########
+  state_name <- append(state_name, state)
+  heroin_na <- append(heroin_na, 
+                      round(sum(is.na(state_df$Heroin))/len, 2))
+  natural_na <- append(natural_na, 
+                       round(sum(is.na(state_df$Natural.Synthetic))/len, 2))
+  drug_na <- append(drug_na, 
+                    round(sum(is.na(state_df$Drug.Overdose))/len, 2))
+  synthetic_na <- append(synthetic_na, 
+                         round(sum(is.na(state_df$Synthetic))/len, 2))
+}
+
+state_na_df <- cbind(State = state_name, 
+                    Heroin.NA = heroin_na, 
+                    Natural.SemiSynthetic.NA = natural_na,
+                    Drug.Overdose.NA = drug_na,
+                    Synthetic.NA = synthetic_na) %>% 
+  as.data.frame() %>% 
+  arrange(desc(Synthetic.NA))
+
+knitr::kable(state_na_df,
+             caption = "Table 1: Proportion of Missing Data for Each State, per Drug Count Category")
+```
+
+Louisiana and Pennsylvania are the only two states with no `Heroin`, `Natural.SemiSynthetic`, nor `Synthetic` data. Drug overdose deaths were reported in these states, but those deaths were not categorized by their causes. Thirteen states have complete data for `Natural.SemiSynthetic` and `Synthetic`. Deaths from heroin appear to be the most under-reported in states.
+
+There is also a time component, where detection and reporting systems may have improved over time—especially for synthetic opioids overdose deaths, which have become a public health concern more recently than overdoses from other drugs.
+
+```{r data_year_plot, echo = FALSE}
+# All years have 612 observations (except for 2025 [510], because data ends in Oct)
+# table(drug_deaths_state$Year)
+
+year_vec <- c()
+heroin_na <- c()
+natural_na <- c()
+drug_na <- c()
+synthetic_na <- c()
+
+
+for (year in unique(drug_deaths_state$Year)){
+  year_df <- drug_deaths_state %>% filter(Year == year)
+  len <- nrow(year_df)
+  ##########
+  year_vec <- append(year_vec, year)
+  heroin_na <- append(heroin_na, 
+                      round(sum(is.na(year_df$Heroin))/len, 2))
+  natural_na <- append(natural_na, 
+                       round(sum(is.na(year_df$Natural.Synthetic))/len, 2))
+  drug_na <- append(drug_na, 
+                    round(sum(is.na(year_df$Drug.Overdose))/len, 2))
+  synthetic_na <- append(synthetic_na, 
+                         round(sum(is.na(year_df$Synthetic))/len, 2))
+}
+
+year_na_df <- cbind(Year = year_vec, 
+                    Heroin.NA = heroin_na, 
+                    Natural.SemiSynthetic.NA = natural_na,
+                    Drug.Overdose.NA = drug_na,
+                    Synthetic.NA = synthetic_na) %>% 
+  as.data.frame()
+
+# knitr::kable(year_na_df,
+#              caption = "Proportion of Missing Data for Each Year, per Drug Count Category")
+  
+year_na_df %>% 
+  mutate(Year = ymd(Year, truncated = 2L)) %>% 
+  pivot_longer(c(2:5),
+               names_to = "drug",
+               values_to = "prop_na") %>% 
+  mutate(drug = factor(drug, levels = c("Heroin.NA", 
+                                        "Natural.SemiSynthetic.NA",
+                                        "Synthetic.NA",
+                                        "Drug.Overdose.NA"))) %>% 
+  ggplot(aes(x = Year, y = prop_na, color = drug)) +
+  geom_line(linewidth = 1) +
+  scale_color_discrete(labels = c("Heroin", "Natural or Semi Synthetic",
+                                  "Synthetic", "Drug Overdose")) +
+  labs(color = "Drug Category",
+    y = "Proportion of NA Values",
+    title = "Figure 1: Proportion of Missing State Overdose\nDeath Data, per Drug Category") +
+  theme_bw()
+```
+
+As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 1, the drug category with the largest proportion of missing data is consistently heroin.
+
+Based on NVSS documentation and this missing data analysis, reporting of drug overdose deaths appears to be the most consistent between different US states (overdose deaths are typically reported first and more consistently, given investigating the direct cause of death is often a more involved process and different states have different investigation processes/resource delegation for investigation). Thus, the primary focus of this analysis will focus on analyzing drug overdose data.
+
+### Exploratory Data Analysis
+
+To first begin exploring the NVSS data, the relationship between time and 12 month period drug overdose, the national number of reported drug overdose deaths per 100,000 in 12 month-ending periods were plotted against the year the period ended in.
+
+```{r, echo = FALSE}
+drug_deaths_nat %>% 
+  ggplot(aes(x = factor(Year), y = Drug.Overdose)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(x = "Year",
+       y = "Drug Overdose Deaths per 100,000",
+       title = "Figure 2: 12 Month-Ending Reported National Drug Overdose\nDeaths per 100,000 by Year, from 2015 to 2025") +
+  theme_bw()
+```
+
+The years with the greatest variation in national 12 month-ending reported drug overdose deaths were 2020 and 2024. Furthermore, these boxplots show generally show the national 12 month-ending reported drug overdose deaths increasing from 2015 to 2023, because beginning to decrease from 2023 to 2025. This begins to suggest a relationship of drug overdose deaths and time.
+
+Next, the same analysis was conducted with data from the state-level dataset.
+
+```{r, echo = FALSE}
+drug_deaths_state %>% 
+  ggplot(aes(x = factor(Year), y = drugdeathper100k)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(x = "Year",
+       y = "Drug Deaths per 100,000",
+    title = "Figure 3: 12 Month-Ending Reported State Drug Overdose\nDeaths per 100,000 by Year, from 2015 to 2025") +
+  theme_bw()
+```
+
+Though not completely surprising, it is noteworthy how different Figures 2 and 3 look. The variation in 12 month-ending reported drug overdose deaths at the state level per year is much greater than at the national level. Though a general trend can be seen through time, it is somewhat masked by how large the ranges are of 12 month-ending reported drug overdose deaths in each year—especially between 2020 to 2024. This begins to suggest large variation in incident drug overdose deaths by state, something the report will further explore.
+
+To further explore state variation, the ranges of the 12 month-ending reported drug overdose deaths for each state were plotted for all the available state data.
+
+```{r, echo=FALSE}
+#| echo: false
+#| out-height: "500px"
+#| out-width: "800px"
+
+drug_deaths_state %>% 
+  ggplot(aes(y = reorder(State, drugdeathper100k, FUN = max), x = drugdeathper100k)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(x = "Drug Overdose Deaths per 100,000",
+       y = "State",
+    title = "Figure 4: 12 Month-Ending Reported State Drug Overdose\nDeaths per 100,000, from 2015 to 2025") +
+  scale_y_discrete(expand = expansion(mult = c(0.02, 0.02))) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 5))
+```
+
+Now, the variation of state data becomes more apparent. Though time is definitely a component of the variation that is not captured in this figure, these marginal distributions provide a strong glimpse of how varied the 12 month-ending reported drug overdoses counts are per state.
+
+**\[write** **more about certain states vs others\]**

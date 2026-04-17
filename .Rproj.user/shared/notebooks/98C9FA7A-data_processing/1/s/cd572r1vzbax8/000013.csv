@@ -1,0 +1,7 @@
+"0","# Look at ""State.Name"": Notice District of Columbia, Puerto Rico, United States, and New York City"
+"0","states_dataset <- matrix(unique(drug_deaths$State), "
+"0","                         ncol = 9, nrow = 6) %>% "
+"0","  as.data.frame() "
+"0","colnames(states_dataset) <- NULL"
+"0","knitr::kable(states_dataset, "
+"0","             caption = ""US Jursidictions Captured in NVSS Dataset"")"

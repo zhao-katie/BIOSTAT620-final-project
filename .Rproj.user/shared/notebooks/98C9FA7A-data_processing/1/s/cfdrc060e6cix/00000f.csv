@@ -1,0 +1,4 @@
+"0","na_counts_dplyr <- drug_deaths_state %>%"
+"0","  summarise_all(~ round(sum(is.na(.))/nrow(drug_deaths_state),2))"
+"0",""
+"0","knitr::kable(na_counts_dplyr, caption = ""Proportion of NA Values in Each Column of Cleaned NVSS Dataset for State-Level Data"")"

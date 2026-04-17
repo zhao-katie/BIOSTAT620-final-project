@@ -1,0 +1,41 @@
+{
+  "introduction.qmd": {
+    "introduction.html": "fecf23cf"
+  },
+  "about.qmd": {
+    "about.html": "cafc58c8"
+  },
+  "methods.qmd": {
+    "methods.html": "ebb2aac2"
+  },
+  "WA_AL.qmd": {
+    "WA_AL.html": "ae2b25b5"
+  },
+  "national.qmd": {
+    "national.html": "66048974"
+  },
+  "WV_DC.qmd": {
+    "WV_DC.html": "bd35c494"
+  },
+  "state.qmd": {
+    "state.html": "70f50a05"
+  },
+  "index.qmd": {
+    "index.html": "743a32b1"
+  },
+  "report.qmd": {
+    "report.html": "7bb2802b"
+  },
+  "data_processing.qmd": {
+    "data_processing.html": "26e15c05"
+  },
+  "methods.R": {
+    "methods.html": "14822d9e"
+  },
+  "methods_braindump.qmd": {
+    "methods_braindump.html": "4a7fa5ba"
+  },
+  "eda_braindump.qmd": {
+    "eda_braindump.html": "25ca874f"
+  }
+}

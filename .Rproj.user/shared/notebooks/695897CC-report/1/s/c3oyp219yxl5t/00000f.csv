@@ -1,0 +1,2 @@
+"0","as.data.frame(head(drug_deaths_nat, 3)) %>% "
+"0","  knitr::kable(caption = ""Preview of Cleaned NVSS Dataset for US Data"")"

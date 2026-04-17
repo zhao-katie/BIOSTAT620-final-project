@@ -1,0 +1,8 @@
+"0","# All 50 US states + District of Columbia (capital of US)"
+"0",""
+"0","states_dataset <- matrix(c(unique(drug_deaths_state$State), rep("" "", 4)), "
+"0","                         ncol = 11, nrow = 5) %>% "
+"0","  as.data.frame() "
+"0","colnames(states_dataset) <- NULL"
+"0","knitr::kable(states_dataset, "
+"0","             caption = ""US Jursidictions Captured in Cleaned NVSS Dataset"")"

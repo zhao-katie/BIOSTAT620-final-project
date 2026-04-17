@@ -1,0 +1,2 @@
+"0","pop_preview <- drug_deaths[c(1270, 1271),]"
+"0","knitr::kable(head(pop_preview), caption = ""Preview of Merged NVSS and Census Dataset"")"

@@ -1,0 +1,3 @@
+"0","# Split into National vs State-Level Datasets"
+"0","drug_deaths_nat <- drug_deaths %>% filter(State.Abb == ""US"")"
+"0","drug_deaths_state <- drug_deaths %>% filter(State.Abb != ""US"")"

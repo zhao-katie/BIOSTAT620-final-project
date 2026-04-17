@@ -1,0 +1,58 @@
+"0","          list(
+            label = states[i],
+            method = ""update"",
+            args = list(
+              list(visible = visibility_list[[i]]),
+              list(title = paste(""Drug Overdose Deaths in"", states[i]))
+            )
+          )
+"
+"1","$label
+"
+"1","[1]"
+"1"," ""Vermont"""
+"1","
+"
+"1","
+"
+"1","$method
+"
+"1","[1]"
+"1"," ""update"""
+"1","
+"
+"1","
+"
+"1","$args
+"
+"1","$args[[1]]
+"
+"1","$args[[1]]$visible
+"
+"1","[1]"
+"1"," FALSE"
+"1"," FALSE"
+"1"," FALSE"
+"1"," FALSE"
+"1","  TRUE"
+"1","  TRUE"
+"1","
+"
+"1","
+"
+"1","
+"
+"1","$args[[2]]
+"
+"1","$args[[2]]$title
+"
+"1","[1]"
+"1"," ""Drug Overdose Deaths in Vermont"""
+"1","
+"
+"1","
+"
+"1","
+"
+"1","
+"

@@ -1,0 +1,26 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: <i class="bi bi-capsule"></i>
+  navbar:
+    left:
+      - href: index.qmd
+        text: Introduction
+      - href: report.qmd
+        text: Report
+      - href: data_processing.qmd
+        text: About the Data
+
+format:
+  html:
+    theme:
+      - lumen
+      - brand
+    css: styles.css
+    toc: true
+    fig-align: center
+
+editor: visual
+
