@@ -11,27 +11,27 @@ embed-resources: true
 
 ## **NVSS Drug Overdose Data**
 
-The data analyzed in this study comes from the [reported drug overdose death mortality data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) monitored by the United States National Vital Statistics System (NVSS). The NVSS is an inter-governmental system designed to share data on vital statistics (births, deaths, marriages, etc) of jurisdictions of the United States.
+The data analyzed in this study comes from [reported drug overdose mortality data](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) monitored by the United States National Vital Statistics System (NVSS). The NVSS is an inter-governmental system designed to share data on vital statistics (births, deaths, marriages, etc) of jurisdictions of the United States.
 
-Reported provisional counts in the dataset represent the number of deaths due to drug overdose that occurred in the 12-month period ending in the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
+Reported provisional counts in the dataset indicate the number of deaths due to drug overdose that occurred in the 12-month period ending of the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
 
 Reported counts were available for total overdose deaths and drug-specific overdose deaths, at the national and state-level. Deaths were reported for the US jurisdiction in which the death occurred.
 
-More detailed documentation can be found [here](https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm#ref8).
+Additional documentation from NVSS can be found [here](https://www.cdc.gov/nchs/nvss/vsrr/drug-overdose-data.htm#ref8).
 
 ### Data Collection Process
 
-There is typically a lag time between when deaths occurred and when the mortality data cause of death in the NVSS surveillance database updated. Drug overdose deaths are often reported initially without a cause of death because toxicology testing can sometimes be a lengthy process. For drug overdose-related deaths, the latent period between death and reporting to NVSS is typically 4-6 months\*.
+There is typically a lag time between when deaths occurred and when the mortality cause of death data in the NVSS surveillance database updated. Drug overdose deaths are often reported initially without a cause of death because toxicology testing can sometimes be a lengthy process. For drug overdose-related deaths, the latent period between death and reporting to NVSS is typically 4-6 months\*.
 
 It is also important to recognize that these data are often incomplete, and the degree of completeness varies by each US jurisdiction. Thus, the number of drug overdose deaths *are often underestimated* based on reported data relative to the true counts, and are subject to random variation.
 
 That being said, these data are still very valuable; the goal of analyzing these data is surveillance and monitoring of emerging public health trends.
 
-*\*For this report (conducted April 2026), the last month with reported drug overdose deaths data in the selected NVSS dataset was October 2025. Based on the data documentation, it was deemed appropriate to include all the data from January 2015 up to October 2025 in the analysis.*
+*\*For this report (conducted April 2026), the last month with reported drug overdose deaths data in the NVSS dataset was October 2025. Based on the data documentation, it was deemed appropriate to include all the data from January 2015 up to October 2025 in the analysis.*
 
 ### Reported vs Predicted Values
 
-To address the discrepancies between reported and true counts, methods were developed to adjust reported counts for reporting delays by generating a set of predicted counts in the dataset.
+To address discrepancies between reported and true counts, methods were developed to adjust reported counts for reporting delays by generating a set of predicted counts in the dataset.
 
 NVSS data documentation states, “*State predicted drug overdose death counts differed by an average of 0.1% (ranging from 0.0 to 0.5%). National predicted counts for deaths involving opioids had a difference of 0.1%, while state predicted counts had an average difference of 0.3% (ranging from 0.3 to 2.9%).*”
 
@@ -39,7 +39,7 @@ Thus, given that the primary goal of this analysis was to explore overall US dru
 
 ### NVSS Dataset Cleaning
 
-The US overdose deaths data were acquired from the [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) and downloaded as a `.csv` file.
+The [US overdose deaths data](https://www.cdc.gov/nchs/nvss/index.htm) were acquired from the National Vital Statistics System (NVSS) and downloaded as a `.csv` file.
 
 These eight packages were used in the data cleaning, wrangling, and visualization steps of the report:
 
@@ -78,7 +78,7 @@ drug_deaths_preview <- drug_deaths[c(74231, 30021), ] %>%
 knitr::kable(head(drug_deaths_preview, 2), caption = "Preview of Raw NVSS Dataset")
 ```
 
-To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data as a **`Date`** (time) variable.
+To begin cleaning the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data as a **`Date`** (time) variable.
 
 ```{r begin.cleaning}
 drug_deaths <- drug_deaths %>% 
@@ -162,7 +162,7 @@ colnames(indicators) <- c("Causes of Overdose Death")
 knitr::kable(indicators, caption = "Causes of Overdose Deaths captured in the NVSS Dataset")
 ```
 
-Of the available overdose death data available in the dataset, this analysis focused on four categories that captured yearly counts of overdose deaths related to different opioid classes:
+Of the available overdose death data available in the dataset, this analysis focused on four categories that captured yearly counts of overdose deaths related to different opioid classes \[1\]:
 
 1.  *Heroin (T40.1)*
 2.  *Natural & semi-synthetic opioids (T40.2)*
@@ -181,7 +181,7 @@ Deaths due to each of these opioids are associated with an International Statist
 
 Deaths where “opioid” was reported as the cause without more specific information were assigned the general ICD-10 code T40.0–T40.4. These were not included in the analysis given the lack of specificity.
 
-As expected, drug overdose deaths can also involve multiple drugs. Following ICD standards, such a death may be included in more than one category when describing the number of overdose deaths associated with a specific class of drug. For example, a death involving heroin and fentanyl would be coded as T40.1 and T40.4 and appear as a count in both categorizations.
+As expected, drug overdose deaths can also involve multiple drugs. Following ICD standards, such a death may be included in more than one "cause of death" category. For example, an overdose death involving heroin and fentanyl would be coded as T40.1 and T40.4, thus appearing as a count in both categorizations.
 
 `pivot_wider()` was then used to create column headers defined by the causes of death.
 
@@ -301,6 +301,10 @@ as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>%
   knitr::kable(caption = "Preview of Cleaned NVSS Dataset for State-Level Data")
 ```
 
+------------------------------------------------------------------------
+
+\[1\] <https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html>
+
 ## **Exploratory Data Analysis**
 
 The first date of recorded data in the dataset is January 2015, the last date of recorded data October 2025. As mentioned in the [Data Collection Process](data_processing.qmd#data-collection-process) subsection, the decision was made to include all available data in the analysis.
@@ -351,7 +355,7 @@ There is no missing data in the dataset that captures country-level data:
 na_counts_dplyr <- drug_deaths_nat %>%
   summarise_all(~ round(sum(is.na(.))/nrow(drug_deaths_nat),2))
 
-knitr::kable(na_counts_dplyr, caption = "Proportion of NA Values in Each Column of Cleaned NVSS Dataset for National US Data")
+knitr::kable(na_counts_dplyr, caption = "Table 1: Proportion of NA Values in Each Column of Cleaned NVSS Dataset for National US Data")
 ```
 
 That being said, there is missing data in the dataset that captures state/jurisdiction-level data:
@@ -360,7 +364,7 @@ That being said, there is missing data in the dataset that captures state/jurisd
 na_counts_dplyr <- drug_deaths_state %>%
   summarise_all(~ round(sum(is.na(.))/nrow(drug_deaths_state),2))
 
-knitr::kable(na_counts_dplyr, caption = "Proportion of NA Values in Each Column of Cleaned NVSS Dataset for State-Level Data")
+knitr::kable(na_counts_dplyr, caption = "Table 2: Proportion of NA Values in Each Column of Cleaned NVSS Dataset for State-Level Data")
 ```
 
 As acknowledged in the NVSS data documentation, each state does have different policies / procedures for reporting causes of mortality. While there are no `Drug.Overdose` missing data, there are missing data for the columns `Heroin`, `Natural.SemiSynthetic`, and `Synthetic` (as well as `syntheticdeathper100k`, given it is calculated from `Synthetic`).
@@ -402,7 +406,7 @@ state_na_df <- cbind(State = state_name,
   arrange(desc(Synthetic.NA))
 
 knitr::kable(state_na_df,
-             caption = "Table 1: Proportion of Missing Data for Each State, per Drug Count Category")
+             caption = "Table 3: Proportion of Missing Data for Each State, per Drug Count Category")
 ```
 
 Louisiana and Pennsylvania are the only two states with no `Heroin`, `Natural.SemiSynthetic`, nor `Synthetic` data. Drug overdose deaths were reported in these states, but those deaths were not categorized by their causes. Thirteen states have complete data for `Natural.SemiSynthetic` and `Synthetic`. Deaths from heroin appear to be the most under-reported in states.
@@ -464,7 +468,7 @@ year_na_df %>%
   theme_bw()
 ```
 
-As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 1, the drug category with the largest proportion of missing data is consistently heroin.
+As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 3, the drug category with the largest proportion of missing data is consistently heroin.
 
 Based on NVSS documentation and this missing data analysis, reporting of drug overdose deaths appears to be the most consistent between different US states (overdose deaths are typically reported first and more consistently, given investigating the direct cause of death is often a more involved process and different states have different investigation processes/resource delegation for investigation). Thus, the primary focus of this analysis will focus on analyzing drug overdose data.
 

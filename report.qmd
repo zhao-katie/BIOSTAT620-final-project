@@ -39,8 +39,6 @@ opts_chunk$set(
 
 The US overdose deaths data were acquired from the [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) and downloaded as a `.csv` file. For every month between January 2015 to October 2025, this dataset captured the number of deaths in US jurisdictions due to drug overdose that occurred in the 12-month period ending in the month indicated. For example, the reported count of January 2015 for a given US jurisdiction represents the reported number of overdose deaths from January 2014 to January 2015.
 
-More details about the data collection process are discussed under the [About the Data](data_processing.html) tab.
-
 ```{r, echo = FALSE}
 drug_deaths <- read.csv("VSRR_Provisional_Drug_Overdose_Death_Counts.csv")
 
@@ -98,7 +96,7 @@ drug_deaths <- drug_deaths %>%
 drug_deaths <- rbind(drug_deaths, new_york)
 ```
 
-To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data. After inspecting the `State` categories, it was decided to filter out *Puerto Rico* data. Furthermore, data for *New York City* and *New York* were combined into one category, *New York*. These decisions are covered in more detail under the [About the Data](data_processing.qmd) tab.
+To begin clean the data, the `Period`, `Percent.Pending.Investigation`, `Footnote`, `Foot.Symbol`, and `Predicted.Values` columns were removed. A `Date` variable was added to concatenate the month and year data. After inspecting the `State` categories, it was decided to filter out *Puerto Rico* data. Furthermore, data for *New York City* and *New York* were combined into one category, *New York*.
 
 As previously mentioned, this dataset captures the monthly incident overdose deaths caused by many different classes of drugs, which are captured under the `Indicator` variable.
 
@@ -117,8 +115,6 @@ Given the goals of this this analysis to study drug overdose and opioid overdose
 2.  *Natural & semi-synthetic opioids (T40.2)*
 3.  *Synthetic opioids, excl. methadone (T40.4)*
 4.  *Number of Drug Overdose Deaths* \[comparison group\]
-
-More information on the classifications of opioid-related deaths through ICD-10 codes (eg. *T40.1*) and background on these opioids can be found in the [About the Data](data_processing.qmd) tab.
 
 Of important note, category #3, *Synthetic opioids, excl. methadone,* classifies overdose deaths attributed to fentanyl and its derivatives. This is the class of opioids tied to the "third wave" of the US opioid overdose crisis and will be of particular interest to this analysis.
 
@@ -153,7 +149,7 @@ drug_deaths <- drug_deaths %>%
 
 Next, for the state-level analysis to be normalized by population, US yearly census data was added to the NVSS dataset. This population data were acquired from United States Census Bureau ([2010-2020](https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates/2020-evaluation-estimates/2010s-state-total.html), [2020-2025](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html)) and downloaded as `.xlsx` files.
 
-After cleaning the population data, it was attatched to the NVSS table. Two additional columns, `drugdeathper100k` and `syntheticdeathper100k` were created to capture the number of deaths per 100,000 in the population from *all drug overdoses* and *synthetic opioid overdosees*, respectively. More information can be found under the [About the Data](data_processing.qmd) tab.
+After cleaning the population data, it was attatched to the NVSS table. Two additional columns, `drugdeathper100k` and `syntheticdeathper100k` were created to capture the number of deaths per 100,000 in the population from *all drug overdoses* and *synthetic opioid overdosees*, respectively.
 
 ```{r, message = FALSE, echo = FALSE}
 # Population of 2010s
@@ -209,6 +205,8 @@ as.data.frame(head(drug_deaths_nat, 3)) %>%
 as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>% 
   knitr::kable(caption = "Preview of Cleaned NVSS Dataset for State-Level Data")
 ```
+
+More details about the data collection process, data cleaning decisions for the NVSS and Population Census datasets, classifications of opioid-related deaths, and more can be found under the [About the Data](data_processing.html) tab.
 
 Tools from the `plotly` and `DT` packages were used to visualize these data in the following results section.
 

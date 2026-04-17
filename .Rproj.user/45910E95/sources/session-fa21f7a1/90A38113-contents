@@ -16,7 +16,7 @@ website:
 format:
   html:
     theme:
-      - lumen
+      - minty
       - brand
     css: styles.css
     toc: true

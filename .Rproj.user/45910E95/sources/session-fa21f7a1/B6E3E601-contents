@@ -19,17 +19,15 @@ The opioid overdose public health crisis is classically defined by public health
 
 -   **Wave 2 \[2010 - 2015\]:** Rise in overdose deaths related to heroin, a stronger synthetic opioid than traditional prescription opioids.
 
--   **Wave 3 \[2013 - onwards\]**: Defined by the widespread emergence of fentanyl, an extremely potent synthetic opioid derivative, to the illicit drug market. Fentanyl and its derivatives are very cheap to manufacture, and are often laced in other drugs (cocaine, methamphetamine, etc).
+-   **Wave 3 \[2013 - Present\]**: Defined by the widespread emergence of fentanyl, an extremely potent synthetic opioid derivative, on the illicit drug market. Fentanyl and its derivatives are very cheap to manufacture, and are often also laced in other illicit drugs (cocaine, methamphetamine, etc).
 
-The [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) is an inter-governmental system for sharing US vital data (births, deaths, marriages, etc). The [US drug overdose death dataset](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) used in this analysis was produced by the NVSS, and tracked the number of drug overdose deaths in 12-month periods for US jurisdictions from 2015 to 2025.
+The [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm) is an inter-governmental system for sharing US vital data (births, deaths, marriages, etc). The [US drug overdose death dataset](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data) used in this analysis was produced by the NVSS, and reports the number of drug overdose deaths in 12-month periods for US jurisdictions from 2015 to 2025.
 
-The primary goal of this analysis is to study the trends of synthetic opioid overdose deaths and overall drug overdose deaths between 2015 and 2025, both at the national and state level. Secondary analysis will consider specific jurisdictions with unique overdose death trends.
+The primary goal of this analysis is to study the trends of overall drug overdose deaths and synthetic opioid overdose deaths between 2015 and 2025, both at the national and state level. Secondary analysis will examine specific jurisdictions with unique drug overdose death trends.
 
-<center>
-[REPORT](report.qmd){.btn .btn-primary}
-[ABOUT THE DATA](data_processing.qmd){.btn .btn-primary}
-</center>
-***
+<center>[REPORT](report.qmd){.btn .btn-primary} [ABOUT THE DATA](data_processing.qmd){.btn .btn-primary}</center>
+
+------------------------------------------------------------------------
 
 \[1\] <https://nida.nih.gov/research-topics/opioids>
 
