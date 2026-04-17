@@ -562,7 +562,7 @@ drug_states %>%
     font = list(size = 10)),
     xaxis = list(hoverformat = "<b> 12 Month-Ending Period: %B %Y </b>"),
     yaxis = list(title = "New Deaths per 100,000"),
-         title = "Figure 5: 12 Month-Ending Reported Drug Overdose\nDeaths, from January 2015 to October 2025",
+         title = "Figure 5: 12 Month-Ending Reported Drug Overdose\nDeaths (per 100,000), from January 2015 to October 2025",
          margin = list(l = 80, r = 40, t = 100, b = 60))
 
 ```
@@ -764,7 +764,7 @@ fig <- fig %>%
       font = list(size = 10)),
     xaxis = list(hoverformat = "<b> 12 Month-Ending Period: %B %Y </b>"),
     title = list(
-      text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths in\n", states[1], ", from January 2015 to October 2025"),  # initial title
+      text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths in\n", states[1], " (per 100,000), from January 2015 to October 2025"),  # initial title
       y = 0.87,
       yanchor = "top"
     ),
@@ -784,7 +784,7 @@ fig <- fig %>%
             args = list(
               list(visible = visibility_list[[i]]),
               list(title = list(
-                text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths\n", states[i], ", from January 2015 to October 2025"),
+                text = paste0("Figure 6: 12 Month-Ending Reported Drug Overdose Deaths in\n", states[i], " (per 100,000), from January 2015 to October 2025"),
                 y = 0.87,
                 yanchor = "top"
                 ))
