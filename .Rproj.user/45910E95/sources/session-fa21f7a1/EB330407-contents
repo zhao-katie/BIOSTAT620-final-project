@@ -2,7 +2,7 @@
 title: "620 Final Report"
 format: 
   html:
-    fontsize: 1.1em
+    fontsize: 1.0em
 editor: visual
 toc: true
 embed-resources: true
@@ -395,7 +395,7 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
 
 Figure 3 explores the percent change for each US state in 12 month-ending drug overdose deaths per 100,000, comparing data from January 2015 and October 2025. This figure further highlights that the degree of severity of the modern overdose crisis varies greatly between states; there is no singular trend that every state follows.
 
-For example, some states, like Michigan and New Hampshire, saw a decrease in 12 month-ending drug overdose deaths per 100,000 (11.11% and -30.77%, respectively) when comparing reported counts from January 2015 and October 2025.
+For example, some states, like Michigan and New Hampshire, saw a decrease in 12 month-ending drug overdose deaths per 100,000 (-11.11% and -30.77%, respectively) when comparing reported counts from January 2015 and October 2025.
 
 However, many more states experienced percent increases in 12 month-ending drug overdose deaths per 100,000. Overall, states on the west side of the country appeared to experience larger percentage increases in overdose deaths compared to the east side. Of particular concern are Washington and Alaska, which experienced some of the largest percent increase in 12 month-ending drug overdose deaths across the decade (178% and 159%, respectively).
 

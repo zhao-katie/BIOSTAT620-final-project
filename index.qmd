@@ -4,7 +4,7 @@ subtitle: "BIOSTAT 620 Final Project, Winter 2026"
 author: "Katie Zhao"
 format: 
   html:
-    fontsize: 1.1em
+    fontsize: 1.0em
 ---
 
 Since the 1990s, one looming facet of the United States’ challenge with rising drug overdose deaths has been characterized by the opioid overdose epidemic.

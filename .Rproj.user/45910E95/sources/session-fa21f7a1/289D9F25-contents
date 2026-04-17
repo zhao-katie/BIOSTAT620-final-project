@@ -3,7 +3,7 @@ title: "About the Data"
 format: 
   html:
     code-fold: true
-    fontsize: 1.1em
+    fontsize: 1.0em
 editor: visual
 toc: true
 embed-resources: true
