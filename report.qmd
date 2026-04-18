@@ -233,7 +233,7 @@ drug_deaths_nat %>%
             marker = list(color = "lightblue"),
             customdata = ~paste(Month, Year),
             hovertemplate = paste(
-      "Synthetic Opioids\nOverdose Deaths: %{y:.2f}<br>",
+      "Synthetic Opioid\nOverdose Deaths: %{y:.2f}<br>",
       "<extra></extra>"),
             name = "Synthetic Opioids") %>% 
   ## NATURAL AND SEMI-SYNTHETIC
@@ -243,7 +243,7 @@ drug_deaths_nat %>%
             marker = list(color = "pink"),
             customdata = ~paste(Month, Year),
             hovertemplate = paste(
-      "Natural and Semi-Synthetic\nOverdose Deaths: %{y:.2f}<br>",
+      "Natural and Semi-Synthetic\nOpioid Overdose Deaths: %{y:.2f}<br>",
       "<extra></extra>"),
             name = "Natural & Semi-Synthetic\nOpioids") %>% 
   ## HEROIN
@@ -744,7 +744,7 @@ for (i in seq_along(states)) {
       marker = list(color = state_colors[state_data$State[1]]),
       customdata = ~paste(Month, Year),
       hovertemplate = paste(
-      "Synthetic Opioids\nOverdose Deaths per 100k: %{y:.2f}<br>",
+      "Synthetic Opioid\nOverdose Deaths per 100k: %{y:.2f}<br>",
       "<extra></extra>")
     )
 }
@@ -814,11 +814,11 @@ Overall, this analysis revealed that during this decade, synthetic opioid overdo
 
 While analysis at the national level revealed a general relationship between the progression of time and the number of reported drug overdoses in 12 month periods, there was still much inter-state variability in these trends. Some states experienced large percent increases in 12 month-ending drug overdose deaths between January 2015 and October 2025, while others experienced notable decreases \[Figure 3\]. Furthermore, the magnitudes of the percent increases / decreases were quite varied as well. When broken up by percent changes in 12 month-ending drug overdose deaths per state before and after January 2023, similar variation was observed \[Figure 4a and Figure 4b\].
 
-Finally, specific analysis of three US jurisdictions further highlighted varying trends in 12 month-ending drug overdose deaths across the decade, but all showed a strong relationship between total overdose deaths and synthetic opioid overdose deaths. In the latter half of the decade, as 12 month-ending synthetic opioid overdose deaths increased, so did the 12 month-ending drug overdose deaths, and vice-versa for decreases.
+Finally, specific analysis of three US jurisdictions further highlighted varying trends in 12 month-ending drug overdose deaths across the decade, but all showed a strong relationship between total overdose deaths and synthetic opioid overdose deaths. In the latter half of the decade, as 12 month-ending synthetic opioid overdose deaths increased, so did the 12 month-ending drug overdose deaths, and vice-versa for decreases \[Figure 6\].
 
 The major limitation of this study comes from the nature of reported mortality data for drug overdoses and the variance in reporting procedures in different states \[see [Data Collection Process](data_processing.qmd#data-collection-process){target="_blank"}\]. Furthermore, as indicated by the [Missing Data](data_processing.qmd#missing-data){target="_blank"} tab, there were states with missing data for the number of reported deaths attributed to specific opioid overdoses in 12 month periods. Thus, for example, Figure 1 underrepresents the true counts of overdose deaths per 12 month periods from the specific opioid classes. Furthermore, the primary "unit" of data, deaths in 12 month-ending periods, is inherently a less intuitive measurement (than, say incident deaths per month). Yet, despite these limtations, these data do help illustrate overall trends that are useful for hypothesis generation and policy development.
 
-With a strong understanding of how tied the United States’ drug overdose crisis is to synthetic opioids overdoses, it is worth qualitatively considering the trends seen in the District of Columbia and Vermont, which can illuminate what policies may be consequential in synthetic opioid overdose intervention. Both jurisdictions saw rapid increases in synthetic opioid (and total) drug overdose deaths prior to 2023, but also experienced sharp decreases in reported overdose death counts from 2023 onward.
+With a strong understanding of how tied the United States’ drug overdose crisis is to synthetic opioids overdoses, it is worth qualitatively considering the trends seen in the District of Columbia and Vermont, which can illuminate what policies may be consequential in synthetic opioid overdose intervention. Both jurisdictions saw rapid increases in synthetic opioid (and total) drug overdose deaths prior to 2023, but also experienced sharp decreases in reported overdose death counts from 2023 onward \[Figure 6 \].
 
 In the District of Columbia, government officials focused on “*building a strong, responsive system of care for residents…..distributing over 100,000 free naloxone kits in 2024 and opening the D.C. Stabilization Center—a 24/7 facility providing immediate care for individuals experiencing acute intoxication*” \[2\]. Naloxone is a medication that can be administered to an individual experiencing opioid overdose and rapidly reverse the overdose \[3\]. As of March 2025, “*the center has had over 8,200 admissions since opening in 2023 and offers behavioral health support, peer counseling, and links to long-term treatment.*” \[2\]
 

@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: <i class="bi bi-capsule"></i>
+  title: 💊
   navbar:
     left:
       - href: index.qmd
@@ -12,6 +12,8 @@ website:
         text: Report
       - href: data_processing.qmd
         text: About the Data
+      - href: presentation.qmd
+        text: Presentation
 
 format:
   html:
