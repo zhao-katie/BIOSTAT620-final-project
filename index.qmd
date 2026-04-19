@@ -23,12 +23,12 @@ The opioid overdose public health crisis is classically defined by public health
 
 The [National Vital Statistics System (NVSS)](https://www.cdc.gov/nchs/nvss/index.htm){target="_blank"} is an inter-governmental system for sharing US vital data (births, deaths, marriages, etc). The [US drug overdose death dataset](https://data.cdc.gov/National-Center-for-Health-Statistics/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a/about_data){target="_blank"} used in this analysis was produced by the NVSS, and reports the number of drug overdose deaths in 12-month periods for US jurisdictions from 2015 to 2025.
 
-The primary goal of this analysis is to study the trends of overall drug overdose deaths and synthetic opioid overdose deaths between 2015 and 2025, both at the national and state level. Secondary analysis will examine specific jurisdictions with unique drug overdose death trends.
+The primary goal of this analysis is to study the trends of overall drug overdose deaths and synthetic opioid overdose deaths from 2015 to 2025, at the national and state level. Secondary analysis will examine specific jurisdictions with unique drug overdose death trends.
 
 <center>[REPORT](report.qmd){.btn .btn-primary} [ABOUT THE DATA](data_processing.qmd){.btn .btn-primary}</center>
 
 ------------------------------------------------------------------------
 
-\[1\] <https://nida.nih.gov/research-topics/opioids>{target="_blank"}
+\[1\] [https://nida.nih.gov/research-topics/opioids](https://nida.nih.gov/research-topics/opioids){target="_blank"}
 
-\[2\] <https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html>{target="_blank"}
+\[2\] [https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html](https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html){target="_blank"}

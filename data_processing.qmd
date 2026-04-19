@@ -307,7 +307,7 @@ as.data.frame(drug_deaths_state[c(6126, 6576, 2074), ]) %>%
 
 ------------------------------------------------------------------------
 
-\[1\] <https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html>{target="_blank"}
+\[1\] [https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html](https://www.cdc.gov/overdose-prevention/about/understanding-the-opioid-overdose-epidemic.html){target="_blank"}
 
 ## **Exploratory Data Analysis**
 
@@ -452,8 +452,10 @@ year_na_df <- cbind(Year = year_vec,
 
 # knitr::kable(year_na_df,
 #              caption = "Proportion of Missing Data for Each Year, per Drug Count Category")
-  
-year_na_df %>% 
+```
+
+```{r, echo = FALSE}
+year_plot <- year_na_df %>% 
   mutate(Year = ymd(Year, truncated = 2L)) %>% 
   pivot_longer(c(2:5),
                names_to = "drug",
@@ -470,6 +472,9 @@ year_na_df %>%
     y = "Proportion of Missing Values",
     title = "Figure 1: Proportion of Missing State Overdose\nDeath Data, per Drug Category") +
   theme_bw()
+year_plot
+
+ggsave("year_plot.png", year_plot, width = 6, height = 4)
 ```
 
 As hypothesized, the proportion of missing data for the drug categories per year does decrease over time, though a small increase is seen from 2023-2025. Similar to what was seen at the in Table 3, the drug category with the largest proportion of missing data is consistently heroin. Again, there is no missing drug overdose death data in any year.

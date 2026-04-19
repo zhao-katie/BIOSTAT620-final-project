@@ -11,6 +11,7 @@
 "0","    Indicator == ""Methadone (T40.3)"" ~ ""Methadone"","
 "0","    Indicator == ""Number of Drug Overdose Deaths"" ~ ""Drug.Overdose"","
 "0","    Indicator == ""Natural & semi-synthetic opioids (T40.2)"" ~ ""Natural.SemiSynthetic"","
+"1",""
 "0","    TRUE ~ ""Synthetic"""
 "0","  ))"
 "0",""

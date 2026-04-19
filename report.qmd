@@ -217,7 +217,7 @@ Tools from the `plotly` and `DT` packages were used to visualize these data in t
 <center>
 
 ```{r, echo = FALSE}
-drug_deaths_nat %>% 
+nat_trends <- drug_deaths_nat %>% 
   plot_ly(x = ~Date, y = ~Drug.Overdose,
           type = "bar",
           marker = list(color = "black"),
@@ -265,6 +265,12 @@ drug_deaths_nat %>%
     yaxis = list(title = "Deaths"),
          title = "Figure 1: 12 Month-Ending Reported Drug Overdose Deaths\nin the United States, from January 2015 to October 2025",
          margin = list(l = 40, r = 40, t = 100, b = 60))
+nat_trends
+```
+
+```{r, echo = FALSE}
+library(htmlwidgets)
+saveWidget(nat_trends, "figs/nat_trends.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -299,7 +305,8 @@ drug_deaths_heatmap <- as.matrix(drug_deaths_heatmap)
 
 
 # Create a heatmap using plot_ly()
-plot_ly(x=colnames(drug_deaths_heatmap), y=rownames(drug_deaths_heatmap),
+state_heatmap <- plot_ly(x=colnames(drug_deaths_heatmap), 
+                         y=rownames(drug_deaths_heatmap),
              z=~drug_deaths_heatmap,
              type="heatmap",
         colorbar = list(title = "Drug Overdose Deaths\nper 100,000"),
@@ -311,6 +318,10 @@ plot_ly(x=colnames(drug_deaths_heatmap), y=rownames(drug_deaths_heatmap),
           textposition = "none") %>% 
   layout(title = "Figure 2: 12 Month-Ending Reported Drug Overdose Deaths per 100,000\nin US States, from January 2015 to October 2025",
          margin = list(l = 40, r = 40, t = 90, b = 60))
+
+state_heatmap
+
+saveWidget(state_heatmap, "figs/state_heatmap.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -373,7 +384,7 @@ set_map_details <- list(
 )
 
 # Create plot
-plot_geo(percent_change, locationmode = 'USA-states') |> 
+geo_15_25 <- plot_geo(percent_change, locationmode = 'USA-states') |> 
   add_trace(
     z = ~change_15_25, 
     text = ~hover15_25, 
@@ -389,6 +400,10 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
     margin = list(l = 40, r = 40, t = 100, b = 60),
     geo = set_map_details
   )
+
+geo_15_25
+
+saveWidget(geo_15_25, "figs/geo_15_25.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -437,7 +452,7 @@ That being said, there are some limitations with Figure 3 and Table 1. As seen i
 <center>
 
 ```{r, echo = FALSE}
-plot_geo(percent_change, locationmode = 'USA-states') |> 
+geo_15_23 <- plot_geo(percent_change, locationmode = 'USA-states') |> 
   add_trace(
     z = ~change_15_23, 
     text = ~hover15_23, 
@@ -453,6 +468,10 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
     margin = list(l = 40, r = 40, t = 100, b = 60),
     geo = set_map_details
   )
+
+geo_15_23
+
+saveWidget(geo_15_23, "figs/geo_15_23.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -460,7 +479,7 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
 <center>
 
 ```{r, echo = FALSE}
-plot_geo(percent_change, locationmode = 'USA-states') |> 
+geo_23_25 <- plot_geo(percent_change, locationmode = 'USA-states') |> 
   add_trace(
     z = ~change_23_25, 
     text = ~hover23_25, 
@@ -477,6 +496,9 @@ plot_geo(percent_change, locationmode = 'USA-states') |>
     geo = set_map_details
   )
 
+geo_23_25
+
+saveWidget(geo_23_25, "figs/geo_23_25.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -543,7 +565,7 @@ drug_states <- drug_deaths_state %>%
     "District of Columbia", "Washington", "Vermont"
   )))
 
-drug_states %>%
+three_states <- drug_states %>%
   plot_ly(x = ~Date, y = ~drugdeathper100k,
           type = "scatter", mode = "lines",
           color = ~State,
@@ -565,6 +587,8 @@ drug_states %>%
          title = "Figure 5: 12 Month-Ending Reported Drug Overdose\nDeaths (per 100,000), from January 2015 to October 2025",
          margin = list(l = 80, r = 40, t = 100, b = 60))
 
+three_states
+saveWidget(three_states, "figs/three_states.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -800,6 +824,8 @@ fig <- fig %>%
     )
   )
 fig
+
+saveWidget(fig, "figs/three_states_fent.html", selfcontained = TRUE)
 ```
 
 Though the trends of 12 month-ending overdose deaths per 100,000 between the District of Columbia, Vermont, and Washington are very different, Figures 6 does reveals one striking similarity: deaths from synthetic opioid overdoses appear to be a very significant driver of the overall 12 month-ending overdose deaths trends in these three jursidictions.

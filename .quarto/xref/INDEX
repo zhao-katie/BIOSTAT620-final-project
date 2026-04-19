@@ -27,7 +27,8 @@
     "report.html": "7bb2802b"
   },
   "data_processing.qmd": {
-    "data_processing.html": "26e15c05"
+    "data_processing.html": "26e15c05",
+    "data_processing.embed.ipynb": "2686b559"
   },
   "methods.R": {
     "methods.html": "14822d9e"
@@ -40,5 +41,8 @@
   },
   "presentation.qmd": {
     "presentation.html": "04287c45"
+  },
+  "presentation1.qmd": {
+    "presentation1.html": "3fa58384"
   }
 }
