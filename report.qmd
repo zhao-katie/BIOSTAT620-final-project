@@ -268,11 +268,6 @@ nat_trends <- drug_deaths_nat %>%
 nat_trends
 ```
 
-```{r, echo = FALSE}
-library(htmlwidgets)
-saveWidget(nat_trends, "figs/nat_trends.html", selfcontained = TRUE)
-```
-
 </center>
 
 Figure 1 plots the 12 month-ending reported counts of drug overdose deaths in the United States from January 2015 to October 2025 for all drugs, synthetic opioids, natural and semi-synthetic opioids, and heroin. To reiterate interpretation once more, the reported drug overdose count data of January 2015 represents the total reported number of drug overdose deaths from January 2014 to January 2015 in the US.
@@ -320,8 +315,6 @@ state_heatmap <- plot_ly(x=colnames(drug_deaths_heatmap),
          margin = list(l = 40, r = 40, t = 90, b = 60))
 
 state_heatmap
-
-saveWidget(state_heatmap, "figs/state_heatmap.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -402,8 +395,6 @@ geo_15_25 <- plot_geo(percent_change, locationmode = 'USA-states') |>
   )
 
 geo_15_25
-
-saveWidget(geo_15_25, "figs/geo_15_25.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -470,8 +461,6 @@ geo_15_23 <- plot_geo(percent_change, locationmode = 'USA-states') |>
   )
 
 geo_15_23
-
-saveWidget(geo_15_23, "figs/geo_15_23.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -497,8 +486,6 @@ geo_23_25 <- plot_geo(percent_change, locationmode = 'USA-states') |>
   )
 
 geo_23_25
-
-saveWidget(geo_23_25, "figs/geo_23_25.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -588,7 +575,6 @@ three_states <- drug_states %>%
          margin = list(l = 80, r = 40, t = 100, b = 60))
 
 three_states
-saveWidget(three_states, "figs/three_states.html", selfcontained = TRUE)
 ```
 
 </center>
@@ -824,8 +810,6 @@ fig <- fig %>%
     )
   )
 fig
-
-saveWidget(fig, "figs/three_states_fent.html", selfcontained = TRUE)
 ```
 
 Though the trends of 12 month-ending overdose deaths per 100,000 between the District of Columbia, Vermont, and Washington are very different, Figures 6 does reveals one striking similarity: deaths from synthetic opioid overdoses appear to be a very significant driver of the overall 12 month-ending overdose deaths trends in these three jursidictions.
