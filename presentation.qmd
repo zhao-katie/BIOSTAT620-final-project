@@ -11,22 +11,20 @@ format:
 
 ## United States Drug Overdose Crisis
 
-:::: {.columns style="display: flex;"}
-
+::::: {.columns style="display: flex;"}
 ::: {.column width="70%" style="font-size:60%;"}
-- Since 1990s, rising drug overdose deaths have been associated with the **opioid overdose epidemic**
-- **Opioids**:
-  - Substances that block body's pain signal
-  - Subject to misuse/abuse
-  - Decrease respiration and lead to death by oxygen deprivation
-- **Recent Trend [2013-Present]:** Emergence of fentanyl, an extremely potent synthetic opioid, on the illicit drug market
+-   Since 1990s, rising drug overdose deaths have been associated with the **opioid overdose epidemic**
+-   **Opioids**:
+    -   Substances that block body's pain signal
+    -   Subject to misuse/abuse
+    -   Decrease respiration and lead to death by oxygen deprivation
+-   **Recent Trend \[2013-Present\]:** Emergence of fentanyl, an extremely potent synthetic opioid, on the illicit drug market
 :::
 
 ::: {.column width="20%" style="display:flex; align-items:center; justify-content:center;"}
-![](overdose_graphic.jpg){width=80%}
+![](overdose_graphic.jpg){width="80%"}
 :::
-
-::::
+:::::
 
 ## Research Objectives
 
@@ -44,13 +42,13 @@ format:
 
 ## Indicators for *Cause of Death*
 
-1.  Synthetic Opioid
+1.  Synthetic Opioids
 
 2.  Natural & Semi-Synthetic Opioids
 
 3.  Heroin
 
-4.  Overall Drug Overdose Deaths \[to serve as a comparison\]
+4.  Overall Drug Overdose Deaths *\[to serve as a comparison\]*
 
 ## Missing Data (Cause of Death)
 
@@ -209,7 +207,7 @@ drug_deaths_state <- drug_deaths %>% filter(State.Abb != "US")
 ## National Trends
 
 ::::: {.columns style="display: flex;"}
-::: {.column width="80%"}
+::: {.column width="85%"}
 ```{r, echo = FALSE}
 nat_trends <- drug_deaths_nat %>% 
   plot_ly(x = ~Date, y = ~Drug.Overdose,
@@ -263,7 +261,7 @@ nat_trends
 ```
 :::
 
-::: {.column width="20%" style="font-size: 60%; display: flex; align-items: center; justify-content: center;"}
+::: {.column width="15%" style="font-size: 60%; display: flex; align-items: center; justify-content: center;"}
 -   Largest proportion of 12-month ending reported overdose deaths are from **synthetic opioid overdoses** (2016–present)
 -   **Overall & Synthetic Overdoses:** sharp increase from 2019–2023, followed by a decrease from 2023–2025
 :::
