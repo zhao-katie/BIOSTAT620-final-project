@@ -19,7 +19,7 @@ format:
   - Substances that block body's pain signal
   - Subject to misuse/abuse
   - Decrease respiration and lead to death by oxygen deprivation
-- **Recent Trend [2013 - Present]:** Emergence of fentanyl, an extremely potent synthetic opioid, on the illicit drug market
+- **Recent Trend [2013-Present]:** Emergence of fentanyl, an extremely potent synthetic opioid, on the illicit drug market
 :::
 
 ::: {.column width="20%" style="display:flex; align-items:center; justify-content:center;"}
@@ -30,7 +30,7 @@ format:
 
 ## Research Objectives
 
--   **Primary Goal:** Study trends of **overall drug overdose deaths** and **synthetic opioid overdose deaths** from 2015 to 2025
+-   **Primary Goal:** Study trends of **overall drug overdose deaths** and **synthetic opioid overdose deaths** (from 2015 to 2025) at the national and state level
 -   **Secondary Analysis:** Examine **specific US jurisdictions** with **unique drug overdose death trends**
 
 # 🗂️ ABOUT THE DATA
