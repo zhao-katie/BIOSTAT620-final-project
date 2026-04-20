@@ -528,7 +528,7 @@ summary(table_15_23_25$`Percent Change (2023-2025)`)
 
 Comparing January 2015 to January 2023 data, the District of Columbia, Vermont, and Maine saw the largest percent increases in 12 month-ending drug overdose deaths per 100,000 (394%, 242%, and 219%, respectively). All states other than Utah saw percent increases in deaths. The minimum, mean, and maximum of the percent changes per 100,000 were -9.5%, 117%, and 394%. Overall, the percent increases of 12 month-ending drug overdose deaths in US states during this timeframe are also much larger in magnitude than those seen comparing January 2015 to October 2025 data in Table 1.
 
-When comparing January 2023 to October 2025 data, the opposite trend is seen: a majority of states experienced percent decreases in 12 month-ending drug overdose deaths per 100,000. North Carolina and Rhode Island saw the greatest decreases in magnitude, with -59% and -55%, respectively. Notably, Vermont experienced the 7th greatest decrease in magnitude (-51%). The minimum, mean, and maximum of the percent changes per 100,000 were -59%, -33%, and 19%.
+When comparing January 2023 to October 2025 data, the opposite trend is seen: a majority of states experienced percent decreases in 12 month-ending drug overdose deaths per 100,000. Only five states saw a percent increase in death counts during this time: Alaska, Hawaii, Washington, Nevada, and Arizona. North Carolina and Rhode Island saw the greatest decreases in magnitude, with -59% and -55%, respectively. Notably, Vermont experienced the 7th greatest decrease in magnitude (-51%). The minimum, mean, and maximum of the percent changes per 100,000 were -59%, -33%, and 19%.
 
 ### State Specific Trends
 
