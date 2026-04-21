@@ -303,7 +303,7 @@ state_heatmap
 :::
 
 ::: {.column width="15%" style="font-size: 60%; display: flex; align-items: center; justify-content: center;"}
--   Trends related to individual states, not time
+-   Most distinct trends related to individual states, rather than time
 -   **Notable States:** District of Columbia & West Virginia
 :::
 :::::
@@ -438,7 +438,7 @@ geo_23_25
 :::
 
 ::: {.column width="15%" style="font-size: 60%; display: flex; align-items: center; justify-content: center;"}
--   Majority of states see a percent decrease in death counts
+-   Majority of states see a **percent decrease** in death counts
 -   Only 5 states see a percent increase (such as Washington & Alaska
 :::
 :::::
@@ -599,8 +599,8 @@ fig
 :::
 
 ::: {.column width="15%" style="font-size: 60%; display: flex; align-items: center; justify-content: center;"}
--   Trendlines of the 12 month-ending overdose deaths closely match trendline of synthetic opioid overdose deaths
--   12 month-ending reported overdose deaths from synthetic opioids make up majority of the total drug overdose deaths
+-   **Overall overdose deaths** trend closely match of **synthetic opioid overdose** deaths trend
+-   **Synthetic opioid overdose deaths** make up **majority of total drug overdose deaths** each period
 :::
 :::::
 
@@ -608,9 +608,9 @@ fig
 
 ## Conclusions
 
--   Synthetic opioid overdose deaths were a large contributor to total US overdose deaths in 12 month periods \[2016-Present\]
+-   **Synthetic opioid overdose deaths** were a **large contributor to total US overdose deaths** in 12 month periods \[2016-Present\]
 
--   US overdose deaths from [all drugs]{.underline} & [synthetic opioids]{.underline} *in 12 month periods* increased from 2016 to 2023 (with a rapid increase from 2020-2023)
+-   US overdose deaths from [all drugs]{.underline} & [synthetic opioids]{.underline} *in 12 month periods* increased from 2016 to 2023 (then decrease from 2023-2025)
 
 -   **State trends vary greatly**, but state-specific analysis revealed consistent **strong relationship between total overdose deaths and synthetic opioid overdose deaths**
 
